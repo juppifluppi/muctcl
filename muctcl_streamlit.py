@@ -30,6 +30,45 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 
+def gauge(value):
+  option = {
+    "tooltip": {
+      "formatter": '{a} <br/>{b} : {c}%'
+      },
+    "series": [
+      {
+        "name": 'Current',
+        "type": 'gauge',
+        "progress": {
+          "show": False
+          },
+        "axisLine": {
+          "lineStyle": {
+            "width": 6,
+            "color": [
+              [0.2, 'rgb(235, 34, 14)'],
+              [0.4, 'rgb(242, 99, 9)'],
+              [0.6, 'rgb(250, 197, 21)'],
+              [0.8, 'rgb(117, 198, 5)'],
+              [1, 'rgb(56, 182, 14)']
+              ]
+            }
+          },
+        "detail": {
+          "valueAnimation": True,
+          "formatter": f'{value}%',
+          "color": 'auto'
+          },
+        "data": [
+          {
+            "value": value,
+            "name": '%'
+            },
+          ]
+        }
+      ]
+    }
+
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
    return f'background-color: {color}'
@@ -179,7 +218,12 @@ if submit_button:
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(im)
                 style_heading = 'text-align: center'
-                st.markdown(f"<h1 style='{style_heading}'>MIXTURE</h1>", unsafe_allow_html=True)               
+                st.markdown(f"<h1 style='{style_heading}'>MIXTURE</h1>", unsafe_allow_html=True)   
+                st_echarts(option, height="400px", key="echarts-1")
+                value = 55
+                echarts_module.gauge(value)
+
+                
             
             for es in ["descriptors.csv","results.csv","results2.csv"]:
                 try:
