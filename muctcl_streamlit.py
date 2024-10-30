@@ -166,6 +166,8 @@ if submit_button:
                 st.image("tc.png")
                 title_alignment="<style>TC/L {text-align: center}</style>"
                 st.markdown(title_alignment, unsafe_allow_html=True)
+                style_heading = 'text-align: center'
+                st.markdown(f"<h1 style='{style_heading}'>TC/L</h1>", unsafe_allow_html=True)
                 #st.caption("TC/L")
                 #st.write("MUC2 interaction probabilty: "+str(int(df2.iloc[0, 0]*100))+" %")
                 st_echarts(liquidfill_option,key="23456")
