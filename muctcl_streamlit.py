@@ -164,7 +164,16 @@ if submit_button:
                     
             with col1: 
                 st.image("tc.png")
-                st.caption("TC/L")
+                title_alignment=
+                """
+                <style>
+                #TC/L {
+                  text-align: center
+                }
+                </style>
+                """
+                st.markdown(title_alignment, unsafe_allow_html=True)
+                #st.caption("TC/L")
                 #st.write("MUC2 interaction probabilty: "+str(int(df2.iloc[0, 0]*100))+" %")
                 st_echarts(liquidfill_option,key="23456")
             with col2:
