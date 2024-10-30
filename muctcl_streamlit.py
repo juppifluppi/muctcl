@@ -135,6 +135,7 @@ if submit_button:
                 st.write("logD: " + str(round(logd,2)))
                 st.write("CrippenMR: " + str(round(mr,2)))
                 st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
+                st.radial('TC/L',int(round(tcl3*100,2))) 
 
             except:
                 #st.write("Something is wrong with your SMILES code.")
