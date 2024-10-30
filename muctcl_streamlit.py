@@ -170,6 +170,9 @@ if submit_button:
                 st.markdown(" ")
                 st.markdown(" ")
                 st.markdown(" ")               
+                st.markdown(" ")
+                st.markdown(" ")
+                st.markdown(" ")               
                 st.markdown(f"<h1 style='{style_heading}'>MIXTURE:</h1>", unsafe_allow_html=True)
             with col2: 
                 st.image("tc.png")
