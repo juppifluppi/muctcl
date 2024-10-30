@@ -164,10 +164,10 @@ if submit_button:
                 st.image(im)
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
-                st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
+                st.markdown("***")
                 st.markdown(f"<h1 style='{style_heading}'>ISOLATED:</h1>", unsafe_allow_html=True)
-                st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
-                st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
+                st.markdown("***")
+                st.markdown("***")
                 st.markdown(f"<h1 style='{style_heading}'>MIXTURE:</h1>", unsafe_allow_html=True)
             with col2: 
                 st.image("tc.png")
