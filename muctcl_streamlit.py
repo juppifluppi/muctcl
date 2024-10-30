@@ -17,7 +17,7 @@ import subprocess
 from PIL import Image
 import uuid
 from filelock import Timeout, FileLock
-
+from streamlit_echarts import st_echarts
 from rdkit import Chem
 from rdkit import DataStructs
 from rdkit.Chem import Draw
@@ -29,7 +29,6 @@ from dimorphite_dl import DimorphiteDL
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-import streamlit_echarts
 
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
