@@ -18,6 +18,18 @@ from PIL import Image
 import uuid
 from filelock import Timeout, FileLock
 
+from rdkit import Chem
+from rdkit import DataStructs
+from rdkit.Chem import Draw
+from rdkit.Chem import AllChem
+from rdkit.Chem.Fingerprints import FingerprintMols
+from scopy.ScoPretreat import pretreat
+import scopy.ScoDruglikeness
+from dimorphite_dl import DimorphiteDL
+import streamlit as st
+import matplotlib.pyplot as plt
+import numpy as np
+
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
    return f'background-color: {color}'
