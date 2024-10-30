@@ -1,0 +1,11 @@
+streamlit==1.35.0
+rdkit
+stmol
+pandas
+matplotlib
+scipy
+seaborn
+numpy
+mordredcommunity
+streamlit-ketcher
+filelock
