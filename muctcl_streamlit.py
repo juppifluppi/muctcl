@@ -171,7 +171,7 @@ if submit_button:
                 st.image("muc2.png")
                 st.caption("MUC2")
                 liquidfill_option2 = {
-                "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*100)]}]
+                "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0])]}]
                 }
                 st_echarts(liquidfill_option2)
                 #st.write("MUC2 interaction probabilty: "+str(int(df2.iloc[0, 0]*100))+" %")
