@@ -9,3 +9,7 @@ numpy
 mordredcommunity
 streamlit-ketcher
 filelock
+dimorphite_dl
+padelpy
+scopy
+scipy
