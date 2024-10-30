@@ -163,7 +163,7 @@ if submit_button:
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(im)
                 style_heading = 'text-align: center'
-                st.markdown(f"<h1 style='{style_heading}'>COMPOUND</h1>", unsafe_allow_html=True)
+                st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
                 st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
                 st.markdown(f"<h1 style='{style_heading}'>ISOLATED:</h1>", unsafe_allow_html=True)
                 st.markdown(f"<h1 style='{style_heading}'>MIXTURE:</h1>", unsafe_allow_html=True)
