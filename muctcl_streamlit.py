@@ -132,9 +132,9 @@ if submit_button:
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
                 tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
                 tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )    
-                st.write("logD: " + str(round(logd,2)))
-                st.write("CrippenMR: " + str(round(mr,2)))
-                st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
+                #st.write("logD: " + str(round(logd,2)))
+                #st.write("CrippenMR: " + str(round(mr,2)))
+                #st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
@@ -165,7 +165,7 @@ if submit_button:
             with col1: 
                 st.image("tc.png")
                 st.caption("TC/L")
-                st.write("MUC2 interaction probabilty: "+str(int(df2.iloc[0, 0]*100))+" %")
+                #st.write("MUC2 interaction probabilty: "+str(int(df2.iloc[0, 0]*100))+" %")
                 st_echarts(liquidfill_option)
             with col2:
                 st.image("muc2.png")
