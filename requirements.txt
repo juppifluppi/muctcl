@@ -13,3 +13,4 @@ dimorphite_dl
 padelpy
 scopy
 scipy
+st-radial
