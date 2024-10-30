@@ -154,7 +154,7 @@ if submit_button:
                 st.write("CrippenMR: " + str(round(mr,2)))
                 st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
                 liquidfill_option = {
-                "series": [{"type": "liquidFill", "data": [0.6, 0.5, 0.4, 0.3]}]
+                "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
                 st_echarts(liquidfill_option)
            
