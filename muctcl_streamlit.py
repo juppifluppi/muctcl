@@ -17,7 +17,7 @@ import subprocess
 from PIL import Image
 import uuid
 from filelock import Timeout, FileLock
-from st_radial import st_radial
+
 from rdkit import Chem
 from rdkit import DataStructs
 from rdkit.Chem import Draw
