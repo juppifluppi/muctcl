@@ -163,6 +163,7 @@ if submit_button:
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(im)
                 style_heading = 'text-align: center'
+                st.markdown(f"<h1 style='{style_heading}'>COMPOUND</h1>", unsafe_allow_html=True)
                 st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
                 st.markdown(f"<h1 style='{style_heading}'>ISOLATED:</h1>", unsafe_allow_html=True)
                 st.markdown(f"<h1 style='{style_heading}'>MIXTURE:</h1>", unsafe_allow_html=True)
@@ -174,6 +175,7 @@ if submit_button:
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
+                st_echarts(liquidfill_option,key="2543456")
             with col3:
                 st.image("muc2.png")
                 style_heading = 'text-align: center'
@@ -182,7 +184,7 @@ if submit_button:
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0])]}]
                 }
                 st_echarts(liquidfill_option2,key="3456")                                             
-                
+                st_echarts(liquidfill_option2,key="236")                
             
             for es in ["descriptors.csv","results.csv","results2.csv"]:
                 try:
