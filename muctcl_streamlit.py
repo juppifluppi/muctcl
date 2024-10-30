@@ -29,6 +29,7 @@ from dimorphite_dl import DimorphiteDL
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+import streamlit_echarts
 
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
@@ -135,7 +136,10 @@ if submit_button:
                 st.write("logD: " + str(round(logd,2)))
                 st.write("CrippenMR: " + str(round(mr,2)))
                 st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
-                st_radial('TC/L',int(round(tcl3*100,2))) 
+                liquidfill_option = {
+                "series": [{"type": "liquidFill", "data": [0.6, 0.5, 0.4, 0.3]}]
+                }
+                st_echarts(liquidfill_option)
 
             except:
                 #st.write("Something is wrong with your SMILES code.")
@@ -150,7 +154,10 @@ if submit_button:
                 st.write("logD: " + str(round(logd,2)))
                 st.write("CrippenMR: " + str(round(mr,2)))
                 st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
-                st_radial('TC/L',int(round(tcl3*100,2))) 
+                liquidfill_option = {
+                "series": [{"type": "liquidFill", "data": [0.6, 0.5, 0.4, 0.3]}]
+                }
+                st_echarts(liquidfill_option)
            
             with open("descriptors.csv","a") as f:
                 for o in range(0,len(maccskeys)):
