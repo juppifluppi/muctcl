@@ -219,7 +219,7 @@ if submit_button:
                 st.image(im)
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>MIXTURE</h1>", unsafe_allow_html=True)   
-                st_echarts(option, height="400px", key="echarts-1")
+                st_echarts(55, height="400px", key="echarts-1")
                 value = 55
                 echarts_module.gauge(value)
 
