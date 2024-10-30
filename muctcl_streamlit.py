@@ -137,8 +137,18 @@ if submit_button:
                 st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
 
             except:
-                st.write("Something is wrong with your SMILES code.")
-                st.stop()
+                #st.write("Something is wrong with your SMILES code.")
+                #st.stop()
+                sdm = pretreat.StandardizeMol()
+                molx = sdm.disconnect_metals(molx)    
+                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
+                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
+                tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
+                tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
+                tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )    
+                st.write("logD: " + str(round(logd,2)))
+                st.write("CrippenMR: " + str(round(mr,2)))
+                st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
            
             with open("descriptors.csv","a") as f:
                 for o in range(0,len(maccskeys)):
