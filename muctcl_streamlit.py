@@ -138,25 +138,11 @@ if submit_button:
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
-                st_echarts(liquidfill_option)
+                #st_echarts(liquidfill_option)
 
             except:
-                #st.write("Something is wrong with your SMILES code.")
-                #st.stop()
-                sdm = pretreat.StandardizeMol()
-                molx = sdm.disconnect_metals(mol)    
-                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
-                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
-                tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
-                tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
-                tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )    
-                st.write("logD: " + str(round(logd,2)))
-                st.write("CrippenMR: " + str(round(mr,2)))
-                st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
-                liquidfill_option = {
-                "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
-                }
-                st_echarts(liquidfill_option)
+                st.write("Something is wrong with your SMILES code.")
+                st.stop()
            
             with open("descriptors.csv","a") as f:
                 for o in range(0,len(maccskeys)):
@@ -174,13 +160,16 @@ if submit_button:
             df2 = pd.read_csv(r'results.csv')
             df3 = pd.read_csv(r'results2.csv')
            
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
                     
             with col1: 
+                st.image("tc.png")
+                st_echarts(liquidfill_option)
+            with col2:
                 st.write("MUC2 interaction probabilty: "+str(int(df2.iloc[0, 0]*100))+" %")
                 st.write("In presence of bile: "+str(int(df3.iloc[0, 0]*100))+" %")               
                             
-            with col2:
+            with col3:
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(im)
             
