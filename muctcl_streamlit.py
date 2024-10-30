@@ -126,7 +126,7 @@ if submit_button:
 
             try:
                 sdm = pretreat.StandardizeMol()
-                molx = sdm.disconnect_metals(molx)    
+                molx = sdm.disconnect_metals(mol)    
                 logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
                 mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
@@ -140,7 +140,7 @@ if submit_button:
                 #st.write("Something is wrong with your SMILES code.")
                 #st.stop()
                 sdm = pretreat.StandardizeMol()
-                molx = sdm.disconnect_metals(molx)    
+                molx = sdm.disconnect_metals(mol)    
                 logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
                 mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
