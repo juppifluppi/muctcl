@@ -1,3 +1,3 @@
-# mucint
+# muctcl
 
-A web app to predict interactions of drugs with mucin.
+A web app to predict interactions of drugs with bile and mucin.
