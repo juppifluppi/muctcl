@@ -207,11 +207,11 @@ if submit_button:
                 style_heading = f"font-size: 15px; text-align: center;"
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
                 imgs = []
-                #im = Draw.MolDraw2DCairo(350,300)
-                im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
+                im = Draw.MolDraw2DCairo(350,300)
+                #im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 dopts = im.drawOptions()
                 dopts.setBackgroundColour((0,0,0,0))
-                imgs.append(show_mol(im,mol))
+                imgs.append(show_mol(im,(Chem.MolFromSmiles(SMI))))
                 st.image(imgs[0])
                 #st.image(im)
                 st.markdown(f"<h1 style='{style_heading}'>BILE PREDICTION</h1>", unsafe_allow_html=True)
