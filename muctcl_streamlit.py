@@ -161,17 +161,16 @@ if submit_button:
             df5 = pd.read_csv(r'results4.csv') 
             df6 = pd.read_csv(r'results5.csv') 
            
-            col1, col2, col3 = st.columns(3)
+            col1, col2 = st.columns(2)
 
             with col1: 
-                im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
-                st.image(im)
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
-                st.markdown(" ")
-                st.markdown(" ")               
-                st.markdown(f"<h1 style='{style_heading}'>ISOLATED:</h1>", unsafe_allow_html=True)
+                im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
+                st.image(im)
+               
             with col2: 
+                st.markdown(f"<h1 style='{style_heading}'>MIXTURE PREDICTION</h1>", unsafe_allow_html=True)
                 options = {
                     "tooltip": {"trigger": "item"},
                     "legend": {"top": "5%", "left": "center"},
@@ -203,6 +202,12 @@ if submit_button:
                 st_echarts(
                     options=options, height="500px",
                 )
+                st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
+
+            col1x, col2x, col3x = st.columns(3)       
+            with col1x:
+                st.markdown(f"<h1 style='{style_heading}'>ISOLATED:</h1>", unsafe_allow_html=True)
+            with col2x:
                 st.image("tc.png")
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>TC/L</h1>", unsafe_allow_html=True)
