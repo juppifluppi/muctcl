@@ -206,14 +206,14 @@ if submit_button:
             with col1: 
                 style_heading = f"font-size: 15px; text-align: center;"
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
-                #imgs = []
-                #d2d = Draw.MolDraw2DCairo(350,300)
-                #dopts = d2d.drawOptions()
-                #dopts.setBackgroundColour((0,0,0,0))
-                #imgs.append(show_mol(d2d,mol))
+                imgs = []
+                #im = Draw.MolDraw2DCairo(350,300)
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
-                #st.image(imgs[0])
-                st.image(im)
+                dopts = im.drawOptions()
+                dopts.setBackgroundColour((0,0,0,0))
+                imgs.append(show_mol(im,mol))
+                st.image(imgs[0])
+                #st.image(im)
                 st.markdown(f"<h1 style='{style_heading}'>BILE PREDICTION</h1>", unsafe_allow_html=True)
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [round(tcl3*10/10,2)]}]
