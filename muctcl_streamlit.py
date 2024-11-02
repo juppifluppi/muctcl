@@ -36,14 +36,10 @@ def cooling_highlight(val):
 
 calc = Calculator(descriptors, ignore_3D=False)
 
-def fingerprint_rdk5(self) -> np.ndarray:
-    fp_gen = rdFingerprintGenerator.GetRDKitFPGenerator(maxPath=5,fpSize=16384)
+def fingerprint_rdkit(self,rad,fplength) -> np.ndarray:
+    fp_gen = rdFingerprintGenerator.GetRDKitFPGenerator(maxPath=rad,fpSize=fplength)
     return fp_gen.GetCountFingerprintAsNumPy(self).astype(int)
-
-def fingerprint_rdk7(self) -> np.ndarray:
-    fp_gen = rdFingerprintGenerator.GetRDKitFPGenerator(maxPath=7,fpSize=16384)
-    return fp_gen.GetCountFingerprintAsNumPy(self).astype(int)
-
+   
 def standardize(smiles):
     mol = Chem.MolFromSmiles(smiles)
     clean_mol = rdMolStandardize.Cleanup(mol) 
@@ -113,7 +109,7 @@ if submit_button:
     try:
         if on3 is False:
     
-            for es in ["descriptors.csv","results.csv","results2.csv"]:
+            for es in ["descriptors.csv","results.csv","results3.csv","results4.csv","results5.csv","results2.csv"]:
                 try:
                     os.remove(es)
                 except:
@@ -122,7 +118,8 @@ if submit_button:
             SMI=SMI
                                  
             mol = standardize(SMI)
-            maccskeys = MACCSkeys.GenMACCSKeys(mol)            
+            maccskeys = MACCSkeys.GenMACCSKeys(mol)     
+            rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
             try:
                 sdm = pretreat.StandardizeMol()
@@ -144,18 +141,25 @@ if submit_button:
             with open("descriptors.csv","a") as f:
                 for o in range(0,len(maccskeys)):
                     f.write("maccs_"+str(o)+"\t")    
+                for o in range(0,len(rdk5fp1)):
+                    f.write("rdk5fp1_"+str(o)+"\t")      
                 f.write("\n")  
                 
             with open("descriptors.csv","a") as f:
                 for o in range(0,len(maccskeys)):
                     f.write(str(maccskeys[o])+"\t") 
+                for o in range(0,len(rdk5fp1)):
+                    f.write(str(rdk5fp1[o])+"\t")   
                 f.write("\n")
                                                                                      
             process3=subprocess.Popen(["Rscript", "predict.R"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             process3.communicate()
            
             df2 = pd.read_csv(r'results.csv')
-            df3 = pd.read_csv(r'results2.csv')
+            df3 = pd.read_csv(r'results2.csv')    
+            df4 = pd.read_csv(r'results3.csv') 
+            df5 = pd.read_csv(r'results4.csv') 
+            df6 = pd.read_csv(r'results5.csv') 
            
             col1, col2, col3 = st.columns(3)
 
@@ -189,7 +193,7 @@ if submit_button:
                 st_echarts(liquidfill_option2,key="3456")                                             
                 st_echarts(liquidfill_option2,key="236")                
             
-            for es in ["descriptors.csv","results.csv","results2.csv"]:
+            for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
                 try:
                     os.remove(es)
                 except:
@@ -229,7 +233,10 @@ if submit_button:
                                            
            df2 = pd.read_csv(r'results.csv')
            df3 = pd.read_csv(r'results2.csv')        
-        
+           df4 = pd.read_csv(r'results3.csv') 
+           df5 = pd.read_csv(r'results4.csv') 
+           df6 = pd.read_csv(r'results5.csv') 
+           
            dfx = pd.DataFrame(columns=['Compound', "MUC2 interaction probability", "+bile"])
            dfx["Compound"]=NAMESx
            dfx["MUC2 interaction probability"]=(df2.iloc[:, 0].astype(float))*100
