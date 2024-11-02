@@ -105,15 +105,6 @@ with st.form(key='my_form_to_submit'):
         st.caption("""Version 1.0 (02.11.2024)""")
  
     SMI = st.text_input('Enter [SMILES code](https://pubchem.ncbi.nlm.nih.gov//edit3/index.html) of drug to load', '') 
-    
-#    on = st.toggle('Use drawn structure')
-#    with st.expander("SMILES editor"):
-#        drawer = st_ketcher()
-#        st.caption("Click on Apply to save the drawn structure as input.")
-#
-#    if on:
-#        SMI=drawer
-
 
     on3 = st.toggle('Perform batch calculation',key="16")    
     with st.expander("Batch settings"):
@@ -161,18 +152,11 @@ if submit_button:
                 moly = Chem.MolFromSmiles(SMIy)
                 sdm = pretreat.StandardizeMol()
                 moly = sdm.disconnect_metals(moly)
-                #sdm = pretreat.StandardizeMol()
-                #molx = sdm.disconnect_metals(mol)    
-                #molx = Chem.MolFromSmiles(SMI)
                 logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(moly)
                 mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(moly)    
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
                 tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
                 tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )   
-                #st.write("logD: " + str(round(logd,2)))
-                #st.write("CrippenMR: " + str(round(mr,2)))
-                #st.write("TC/L interaction probability: " + str(int(round(tcl3*100,2))) + " %")
-                #st_echarts(liquidfill_option)
 
             except:
                 st.write("Something is wrong with your SMILES code.")
@@ -208,18 +192,15 @@ if submit_button:
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
                 imgs = []
                 im = Draw.MolDraw2DCairo(350,300)
-                #im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 dopts = im.drawOptions()
                 dopts.setBackgroundColour((0,0,0,0))
                 imgs.append(show_mol(im,(Chem.MolFromSmiles(SMI))))
                 st.image(imgs[0])
-                #st.image(im)
                 st.markdown(f"<h1 style='{style_heading}'>BILE PREDICTION</h1>", unsafe_allow_html=True)
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [round(tcl3*10/10,2)]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
-                #st.image("tc.png",width=80)
                 st.markdown("<img src='https://raw.githubusercontent.com/juppifluppi/muctcl/refs/heads/main/tc.png' width='150' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
                
             with col2: 
@@ -260,7 +241,6 @@ if submit_button:
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*100)/100]}]
                 }
                 st_echarts(liquidfill_option2,key="3456")                                                         
-                #st.image("muc2.png",width=80)
                 st.markdown("<img src='https://raw.githubusercontent.com/juppifluppi/muctcl/refs/heads/main/muc2.png' width='150' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
 
             for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
@@ -292,9 +272,6 @@ if submit_button:
                moly = Chem.MolFromSmiles(SMIy)
                sdm = pretreat.StandardizeMol()
                moly = sdm.disconnect_metals(moly)
-               #sdm = pretreat.StandardizeMol()
-               #molx = sdm.disconnect_metals(mol)    
-               #molx = Chem.MolFromSmiles(SMI)
                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(moly)
                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(moly)    
                tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
