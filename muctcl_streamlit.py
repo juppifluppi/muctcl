@@ -176,12 +176,12 @@ if submit_button:
                     "legend": {"top": "5%", "left": "center"},
                     "series": [
                         {
-                            "name": "访问来源",
+                            "name": "predicted probability",
                             "type": "pie",
                             "radius": ["10%", "30%"],
                             "avoidLabelOverlap": False,
                             "itemStyle": {
-                                "borderRadius": 10,
+                                "borderRadius": 5,
                                 "borderColor": "#fff",
                                 "borderWidth": 2,
                             },
@@ -205,14 +205,14 @@ if submit_button:
 
             col1x, col2x = st.columns(2)       
            
-            with col2x:
+            with col1x:
                 st.markdown(f"<h1 style='{style_heading}'>bile prediction</h1>", unsafe_allow_html=True)
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
                 st.image("tc.png")
-            with col3x:
+            with col2x:
                 st.markdown(f"<h1 style='{style_heading}'>mucin prediction</h1>", unsafe_allow_html=True)
                 liquidfill_option2 = {
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*1)]}]
