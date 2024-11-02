@@ -188,7 +188,7 @@ if submit_button:
                 st.image(im)
                 st.markdown(f"<h1 style='{style_heading}'>BILE PREDICTION</h1>", unsafe_allow_html=True)
                 liquidfill_option = {
-                "series": [{"type": "liquidFill", "data": [int(tcl3)]}]
+                "series": [{"type": "liquidFill", "data": [int(tcl3*100)]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
                 #st.image("tc.png",width=80)
