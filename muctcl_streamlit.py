@@ -142,8 +142,8 @@ if submit_button:
                 #sdm = pretreat.StandardizeMol()
                 #molx = sdm.disconnect_metals(mol)    
                 #molx = Chem.MolFromSmiles(SMI)
-                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(mol)
-                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(mol)    
+                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(moly)
+                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(moly)    
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
                 tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
                 tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )   
