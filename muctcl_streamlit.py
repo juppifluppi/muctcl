@@ -187,6 +187,11 @@ if submit_button:
                 st.image("muc2.png")
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>MUC2</h1>", unsafe_allow_html=True)
+                st.write(int(df2.iloc[0, 0]*1))
+                st.write(int(df3.iloc[0, 0]*1))
+                st.write(int(df4.iloc[0, 0]*1))
+                st.write(int(df5.iloc[0, 0]*1))
+                st.write(int(df6.iloc[0, 0]*1))
                 liquidfill_option2 = {
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*1)]}]
                 }
