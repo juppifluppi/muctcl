@@ -226,27 +226,14 @@ if submit_button:
         if on3 is True:
 
            SMILESx=SMILESx.split('\n')           
-           NAMESx=NAMESx.split('\n')
-
-
-           try:
-               sdm = pretreat.StandardizeMol()
-               molx = sdm.disconnect_metals(mol)    
-               logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
-               mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
-               tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
-               tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
-               tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )    
-
-           except:
-               st.write("Something is wrong with your SMILES code.")
-               st.stop()           
+           NAMESx=NAMESx.split('\n')  
 
            for es in ["descriptors.csv","results.csv","results3.csv","results4.csv","results5.csv","results2.csv"]:
                 try:
                     os.remove(es)
                 except:
                     pass
+           omoo=[]
 
            for cx in range(0,len(SMILESx)):
                SMI=SMILESx[cx]
@@ -254,6 +241,16 @@ if submit_button:
                mol = standardize(SMI)
                maccskeys = MACCSkeys.GenMACCSKeys(mol)     
                rdk5fp1 = fingerprint_rdkit(mol,5,2048)
+
+               try:
+                   sdm = pretreat.StandardizeMol()
+                   molx = sdm.disconnect_metals(mol)    
+                   logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
+                   mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
+                   tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
+                   tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
+                   tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )     
+                   omoo.append(int(round(tcl3*100,2)))
     
                if cx == 0:
 
@@ -292,7 +289,7 @@ if submit_button:
            dfx["Mixture 4"]=dfx.iloc[:, 1].astype(int)
            dfx["Isolated 1"]=(df2.iloc[:, 0].astype(float))*100
            dfx["Isolated 1"]=dfx.iloc[:, 1].astype(int)
-           dfx["Isolated 2"]=(int(round(tcl3*100,2)))
+           dfx["Isolated 2"]=(omoo)
            dfx["Isolated 2"]=dfx.iloc[:, 1].astype(int)
     
            #dfx.reset_index(inplace=True)               
