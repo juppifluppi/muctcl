@@ -211,7 +211,7 @@ if submit_button:
                             {"value": int(df3.iloc[0, 0]*100), "name": "bile+mucin interacting"},
                             {"value": int(df4.iloc[0, 0]*100), "name": "mucin interacting"},
                             {"value": int(df5.iloc[0, 0]*100), "name": "bile interacting"},
-                            {"value": int(df6.iloc[0, 0]*100)4, "name": "non-interacting"},
+                            {"value": int(df6.iloc[0, 0]*100), "name": "non-interacting"},
                         ],
                     }
                 ],
