@@ -29,6 +29,15 @@ from dimorphite_dl import DimorphiteDL
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+from dimorphite_dl import DimorphiteDL
+
+dimorphite_dl = DimorphiteDL(
+    min_ph = 6.4,
+    max_ph = 6.6,
+    max_variants = 1,
+    label_states = False,
+    pka_precision = 0.1
+)
 
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
@@ -126,11 +135,15 @@ if submit_button:
             rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
             try:
+                SMIy = str(dimorphite_dl.protonate(SMI)[0])
+                moly = Chem.MolFromSmiles(SMIy)
+                sdm = pretreat.StandardizeMol()
+                moly = sdm.disconnect_metals(moly)
                 #sdm = pretreat.StandardizeMol()
                 #molx = sdm.disconnect_metals(mol)    
-                molx = Chem.MolFromSmiles(SMI)
-                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(molx)
-                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
+                #molx = Chem.MolFromSmiles(SMI)
+                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(moly)
+                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(moly)    
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
                 tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
                 tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )   
