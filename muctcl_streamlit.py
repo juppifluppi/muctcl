@@ -213,7 +213,8 @@ if submit_button:
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*1)]}]
                 }
                 st_echarts(liquidfill_option2,key="3456")                                                         
-                st.image("muc2.png",width=80)
+                #st.image("muc2.png",width=80)
+                st.markdown("<img src='https://github.com/juppifluppi/muctcl/blob/main/muc2.png' width='100' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
 
             for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
                 try:
