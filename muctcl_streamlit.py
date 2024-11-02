@@ -214,7 +214,7 @@ if submit_button:
                 }
                 st_echarts(liquidfill_option2,key="3456")                                                         
                 #st.image("muc2.png",width=80)
-                st.markdown("<img src='https://github.com/juppifluppi/muctcl/blob/main/muc2.png' width='100' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
+                st.markdown("<img src='https://raw.githubusercontent.com/juppifluppi/muctcl/refs/heads/main/muc2.png' width='100' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
 
             for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
                 try:
