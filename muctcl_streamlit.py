@@ -188,7 +188,37 @@ if submit_button:
                 }
                 st_echarts(liquidfill_option2,key="3456")                                                         
 
-
+            options = {
+                "tooltip": {"trigger": "item"},
+               "legend": {"top": "5%", "left": "center"},
+                "series": [
+                    {
+                        "name": "访问来源",
+                        "type": "pie",
+                        "radius": ["40%", "70%"],
+                        "avoidLabelOverlap": False,
+                        "itemStyle": {
+                            "borderRadius": 10,
+                            "borderColor": "#fff",
+                            "borderWidth": 2,
+                        },
+                        "label": {"show": False, "position": "center"},
+                        "emphasis": {
+                            "label": {"show": True, "fontSize": "40", "fontWeight": "bold"}
+                        },
+                        "labelLine": {"show": False},
+                        "data": [
+                            {"value": int(df3.iloc[0, 0]*100), "name": "bile+mucin interacting"},
+                            {"value": int(df4.iloc[0, 0]*100), "name": "mucin interacting"},
+                            {"value": int(df5.iloc[0, 0]*100), "name": "bile interacting"},
+                            {"value": int(df6.iloc[0, 0]*100)4, "name": "non-interacting"},
+                        ],
+                    }
+                ],
+            }
+            st_echarts(
+                options=options, height="500px",
+            )
             st.write(int(df3.iloc[0, 0]*100))
             st.write(int(df4.iloc[0, 0]*100))
             st.write(int(df5.iloc[0, 0]*100))
