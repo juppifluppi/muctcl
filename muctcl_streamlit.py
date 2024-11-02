@@ -276,20 +276,20 @@ if submit_button:
            df5 = pd.read_csv(r'results4.csv') 
            df6 = pd.read_csv(r'results5.csv') 
            
-           dfx = pd.DataFrame(columns=['Compound', "Mixture 1", "Mixture 2", "Mixture 3", "Mixture 4", "Isolated 1", "Isolated 2"])
+           dfx = pd.DataFrame(columns=['Compound', "I", "II", "III", "IV", "bile", "mucin"])
            dfx["Compound"]=NAMESx
-           dfx["Mixture 1"]=(df3.iloc[:, 0].astype(float))*100
-           dfx["Mixture 1"]=dfx.iloc[:, 1].astype(int)
-           dfx["Mixture 2"]=(df4.iloc[:, 0].astype(float))*100
-           dfx["Mixture 2"]=dfx.iloc[:, 1].astype(int)
-           dfx["Mixture 3"]=(df5.iloc[:, 0].astype(float))*100
-           dfx["Mixture 3"]=dfx.iloc[:, 1].astype(int)
-           dfx["Mixture 4"]=(df6.iloc[:, 0].astype(float))*100
-           dfx["Mixture 4"]=dfx.iloc[:, 1].astype(int)
-           dfx["Isolated 1"]=(df2.iloc[:, 0].astype(float))*100
-           dfx["Isolated 1"]=dfx.iloc[:, 1].astype(int)
-           dfx["Isolated 2"]=(omoo)
-           dfx["Isolated 2"]=dfx.iloc[:, 1].astype(int)
+           dfx["I"]=(df3.iloc[:, 0].astype(float))*100
+           dfx["I"]=dfx.iloc[:, 1].astype(int)
+           dfx["II"]=(df4.iloc[:, 0].astype(float))*100
+           dfx["II"]=dfx.iloc[:, 1].astype(int)
+           dfx["III"]=(df5.iloc[:, 0].astype(float))*100
+           dfx["III"]=dfx.iloc[:, 1].astype(int)
+           dfx["IV"]=(df6.iloc[:, 0].astype(float))*100
+           dfx["IV"]=dfx.iloc[:, 1].astype(int)
+           dfx["mucin"]=(df2.iloc[:, 0].astype(float))*100
+           dfx["mucin"]=dfx.iloc[:, 1].astype(int)
+           dfx["bile"]=(omoo)
+           dfx["bile"]=dfx.iloc[:, 1].astype(int)
     
            #dfx.reset_index(inplace=True)               
            st.dataframe(dfx.style.applymap(cooling_highlight,subset=["Mixture 1", "Mixture 2"]))    
