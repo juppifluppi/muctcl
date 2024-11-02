@@ -66,7 +66,8 @@ with st.form(key='my_form_to_submit'):
         
         st.caption(""":black[Background]""")
         st.caption("""muctcl predicts interactions of drugs with bile and mucin, in binary and ternary mixtures. Models are trained based on classifications derived from ¹H-NMR measurements. Binomial logistic regression models are used for classifications
-        of binary drug-bile and drug-mucin mixtures, whereas a 4-class random forest model is used for a prediction of mixtures.""")
+        of binary drug-bile and drug-mucin mixtures, whereas a 4-class random forest model is used for a prediction of mixtures. When selecting batch mode, users can input names and corresponding SMILES codes of multiple molecules in order to output all predictions
+        in an exportable table format.""")
         
         st.caption("""The software is hosted at our [github page](https://github.com/juppifluppi/muctcl).""")
  
@@ -295,6 +296,7 @@ if submit_button:
            dfx["mucin"]=dfx.iloc[:, 6].astype(int)
     
            #dfx.reset_index(inplace=True)               
+           st.caption("The following table gives the predictions (in %) of the 4-class model for each class (I = bile+mucin interacting; II = mucin interacting; III = bile interacting; IV = non-interacting). After that, the prediction for interactio with bile and mucin for isolated measurements are given.")
            st.dataframe(dfx.style.applymap(cooling_highlight,subset=["bile", "mucin"]))    
 
     finally:
