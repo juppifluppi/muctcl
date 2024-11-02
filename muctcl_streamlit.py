@@ -90,7 +90,7 @@ def cooling_highlight(val):
    color = 'green' if val > 49 else "red"                    
    return f'background-color: {color}'
 
-st.title('BILE/MUCIN interaction model')
+st.title('bile/mucin interaction model')
 
 with st.form(key='my_form_to_submit'):
     with st.expander("More information"):
