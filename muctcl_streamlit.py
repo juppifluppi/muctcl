@@ -187,7 +187,7 @@ if submit_button:
                             "radius": ["10%", "30%"],
                             "avoidLabelOverlap": False,
                             "itemStyle": {
-                                "borderRadius": 5,
+                                "borderRadius": 2,
                                 "borderColor": "#fff",
                                 "borderWidth": 2,
                             },
@@ -197,10 +197,10 @@ if submit_button:
                             },
                             "labelLine": {"show": False},
                             "data": [
-                                {"value": int(df3.iloc[0, 0]*100), "name": "bile+mucin interacting", "itemStyle": {"color": "#66b3ff"}},
-                                {"value": int(df4.iloc[0, 0]*100), "name": "mucin interacting", "itemStyle": {"color": "#66b3ff"}},
+                                {"value": int(df3.iloc[0, 0]*100), "name": "bile+mucin interacting", "itemStyle": {"color": "#ff9999"}},
+                                {"value": int(df4.iloc[0, 0]*100), "name": "mucin interacting", "itemStyle": {"color": "#99ff99"}},
                                 {"value": int(df5.iloc[0, 0]*100), "name": "bile interacting", "itemStyle": {"color": "#66b3ff"}},
-                                {"value": int(df6.iloc[0, 0]*100), "name": "non-interacting", "itemStyle": {"color": "#66b3ff"}},
+                                {"value": int(df6.iloc[0, 0]*100), "name": "non-interacting", "itemStyle": {"color": "#ffcc99"}},
                             ],
                         }
                     ],
