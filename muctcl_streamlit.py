@@ -291,7 +291,7 @@ if submit_button:
            dfx["IV"]=dfx.iloc[:, 4].astype(int)
            dfx["bile"]=(omoo)
            dfx["bile"]=dfx.iloc[:, 5].astype(int)
-           dfx["mucin"]=(df2.iloc[:, 0].astype(float))*100
+           dfx["mucin"]=(df2.iloc[:, 1].astype(float))*100
            dfx["mucin"]=dfx.iloc[:, 6].astype(int)
     
            #dfx.reset_index(inplace=True)               
