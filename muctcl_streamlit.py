@@ -183,7 +183,7 @@ if submit_button:
                     "legend": {"top": "5%", "left": "center"},
                     "series": [
                         {
-                            "name": "predicted probability",
+                            "name": "probability [%]",
                             "type": "pie",
                             "radius": ["10%", "30%"],
                             "avoidLabelOverlap": False,
@@ -197,6 +197,7 @@ if submit_button:
                                 "label": {"show": True, "fontSize": "20", "fontWeight": "bold"}
                             },
                             "labelLine": {"show": False},
+                            "color": {"#fff","#fff","#fff","#fff"},
                             "data": [
                                 {"value": int(df3.iloc[0, 0]*100), "name": "bile+mucin interacting"},
                                 {"value": int(df4.iloc[0, 0]*100), "name": "mucin interacting"},
