@@ -33,6 +33,9 @@ import numpy as np
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
    return f'background-color: {color}'
+def highlight_max(s):
+    is_max = s == s.max() # Create a boolean Series where the max value is True
+    return ['background-color: green' if v else '' for v in is_max]
 
 calc = Calculator(descriptors, ignore_3D=False)
 
@@ -281,19 +284,19 @@ if submit_button:
            dfx["I"]=(df3.iloc[:, 0].astype(float))*100
            dfx["I"]=dfx.iloc[:, 1].astype(int)
            dfx["II"]=(df4.iloc[:, 0].astype(float))*100
-           dfx["II"]=dfx.iloc[:, 1].astype(int)
+           dfx["II"]=dfx.iloc[:, 2].astype(int)
            dfx["III"]=(df5.iloc[:, 0].astype(float))*100
-           dfx["III"]=dfx.iloc[:, 1].astype(int)
+           dfx["III"]=dfx.iloc[:, 3].astype(int)
            dfx["IV"]=(df6.iloc[:, 0].astype(float))*100
-           dfx["IV"]=dfx.iloc[:, 1].astype(int)
-           dfx["mucin"]=(df2.iloc[:, 0].astype(float))*100
-           dfx["mucin"]=dfx.iloc[:, 1].astype(int)
+           dfx["IV"]=dfx.iloc[:, 4].astype(int)
            dfx["bile"]=(omoo)
-           dfx["bile"]=dfx.iloc[:, 1].astype(int)
+           dfx["bile"]=dfx.iloc[:, 5].astype(int)
+           dfx["mucin"]=(df2.iloc[:, 0].astype(float))*100
+           dfx["mucin"]=dfx.iloc[:, 6].astype(int)
     
            #dfx.reset_index(inplace=True)               
            st.dataframe(dfx.style.applymap(cooling_highlight,subset=["bile", "mucin"]))    
-    
+
     finally:
         lock.release()
 
