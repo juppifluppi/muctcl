@@ -192,9 +192,9 @@ if submit_button:
                             "radius": ["10%", "30%"],
                             "avoidLabelOverlap": False,
                             "itemStyle": {
-                                "borderRadius": 2,
-                                "borderColor": "#fff",
-                                "borderWidth": 2,
+                                "borderRadius": 1,
+                                "borderColor": "#000",
+                                "borderWidth": 1,
                             },
                             "label": {"show": False, "position": "center"},
                             "emphasis": {
