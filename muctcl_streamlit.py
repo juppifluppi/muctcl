@@ -292,7 +292,7 @@ if submit_button:
            dfx["bile"]=dfx.iloc[:, 1].astype(int)
     
            #dfx.reset_index(inplace=True)               
-           st.dataframe(dfx.style.applymap(cooling_highlight,subset=["Mixture 1", "Mixture 2"]))    
+           st.dataframe(dfx.style.applymap(cooling_highlight,subset=["bile", "mucin"]))    
     
     finally:
         lock.release()
