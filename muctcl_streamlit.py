@@ -5,6 +5,7 @@ from rdkit.Chem.Fingerprints import FingerprintMols
 from rdkit.DataStructs import cDataStructs
 from io import StringIO
 from mordred import Calculator, descriptors
+from rdkit.Chem import rdDepictor
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -209,6 +210,8 @@ if submit_button:
                 d2d = Draw.MolDraw2DCairo(350,300)
                 dopts = d2d.drawOptions()
                 dopts.setBackgroundColour((0,0,0,0))
+                rdDepictor.Compute2DCoords(mol)
+                rdDepictor.StraightenDepiction(mol)
                 imgs.append(show_mol(d2d,mol))
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(imgs[0])
