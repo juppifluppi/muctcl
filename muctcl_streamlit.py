@@ -192,7 +192,22 @@ if submit_button:
                 }
                 st_echarts(liquidfill_option2,key="3456")                                             
                 st_echarts(liquidfill_option2,key="236")                
-            
+                liquidfill_option2 = {
+                "series": [{"type": "liquidFill", "data": [int(df3.iloc[0, 0])]}]
+                }
+                st_echarts(liquidfill_option2,key="3456")                                             
+                st_echarts(liquidfill_option2,key="236")  
+                liquidfill_option2 = {
+                "series": [{"type": "liquidFill", "data": [int(df4.iloc[0, 0])]}]
+                }
+                st_echarts(liquidfill_option2,key="3456")                                             
+                st_echarts(liquidfill_option2,key="236")  
+                liquidfill_option2 = {
+                "series": [{"type": "liquidFill", "data": [int(df5.iloc[0, 0])]}]
+                }
+                st_echarts(liquidfill_option2,key="3456")                                             
+                st_echarts(liquidfill_option2,key="236")  
+           
             for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
                 try:
                     os.remove(es)
