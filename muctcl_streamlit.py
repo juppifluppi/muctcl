@@ -176,7 +176,7 @@ if submit_button:
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
-                st.write(int(round(tcl3*100,2)))
+                st.write(tcl3)
                 st_echarts(liquidfill_option,key="23456")
                 #st.image("tc.png",width=80)
                 st.markdown("<img src='https://raw.githubusercontent.com/juppifluppi/muctcl/refs/heads/main/tc.png' width='150' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
