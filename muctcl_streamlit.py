@@ -132,7 +132,9 @@ if submit_button:
                 mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(molx)    
                 tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
                 tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
-                tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )    
+                tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )   
+                st.write(tcl1)
+                st.write(tcl2)
                 st.write(tcl3)
                 #st.write("logD: " + str(round(logd,2)))
                 #st.write("CrippenMR: " + str(round(mr,2)))
