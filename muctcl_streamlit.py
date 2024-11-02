@@ -215,7 +215,7 @@ if submit_button:
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
-            with col3:
+            with col3x:
                 st.image("muc2.png")
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>MUC2</h1>", unsafe_allow_html=True)
