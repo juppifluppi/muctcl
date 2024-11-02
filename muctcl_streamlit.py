@@ -195,7 +195,7 @@ if submit_button:
                     {
                         "name": "访问来源",
                         "type": "pie",
-                        "radius": ["40%", "70%"],
+                        "radius": ["30%", "30%"],
                         "avoidLabelOverlap": False,
                         "itemStyle": {
                             "borderRadius": 10,
@@ -208,10 +208,10 @@ if submit_button:
                         },
                         "labelLine": {"show": False},
                         "data": [
-                            {"value": int(df3.iloc[0, 0]*100), "name": "bile+mucin interacting"},
-                            {"value": int(df4.iloc[0, 0]*100), "name": "mucin interacting"},
-                            {"value": int(df5.iloc[0, 0]*100), "name": "bile interacting"},
-                            {"value": int(df6.iloc[0, 0]*100), "name": "non-interacting"},
+                            {"value": str(int(df3.iloc[0, 0]*100)+"%"), "name": "bile+mucin interacting"},
+                            {"value": str(int(df4.iloc[0, 0]*100)+"%"), "name": "mucin interacting"},
+                            {"value": str(int(df5.iloc[0, 0]*100)+"%"), "name": "bile interacting"},
+                            {"value": str(int(df6.iloc[0, 0]*100)+"%"), "name": "non-interacting"},
                         ],
                     }
                 ],
