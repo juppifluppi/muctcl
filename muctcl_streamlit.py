@@ -195,7 +195,7 @@ if submit_button:
                     {
                         "name": "访问来源",
                         "type": "pie",
-                        "radius": ["30%", "30%"],
+                        "radius": ["10%", "30%"],
                         "avoidLabelOverlap": False,
                         "itemStyle": {
                             "borderRadius": 10,
