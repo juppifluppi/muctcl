@@ -203,25 +203,22 @@ if submit_button:
                     options=options, height="500px",
                 )
 
-            col1x, col2x, col3x = st.columns(3)       
-            with col1x:
-                st.markdown(f"<h1 style='{style_heading}'>ISOLATED:</h1>", unsafe_allow_html=True)
+            col1x, col2x = st.columns(2)       
+           
             with col2x:
-                st.image("tc.png")
-                style_heading = 'text-align: center'
-                st.markdown(f"<h1 style='{style_heading}'>TC/L</h1>", unsafe_allow_html=True)
+                st.markdown(f"<h1 style='{style_heading}'>bile prediction</h1>", unsafe_allow_html=True)
                 liquidfill_option = {
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
+                st.image("tc.png")
             with col3x:
-                st.image("muc2.png")
-                style_heading = 'text-align: center'
-                st.markdown(f"<h1 style='{style_heading}'>MUC2</h1>", unsafe_allow_html=True)
+                st.markdown(f"<h1 style='{style_heading}'>mucin prediction</h1>", unsafe_allow_html=True)
                 liquidfill_option2 = {
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*1)]}]
                 }
                 st_echarts(liquidfill_option2,key="3456")                                                         
+                st.image("muc2.png")
                
             for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
                 try:
