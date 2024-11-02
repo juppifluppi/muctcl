@@ -172,7 +172,7 @@ if submit_button:
                 col1x, col2x = st.columns(2)
                 with col1x:
                     st.markdown(f"<h1 style='{style_heading}'>bile prediction</h1>", unsafe_allow_html=True)
-                    st.image("tc.png",width=200)
+                    st.image("tc.png",width=100)
                 with col2x:
                     liquidfill_option = {
                     "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
