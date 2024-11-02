@@ -56,7 +56,7 @@ def cooling_highlight(val):
    color = 'green' if val > 49 else "red"                    
    return f'background-color: {color}'
 
-st.title('BILE/MUCIN interaction probability model')
+st.title('BILE/MUCIN interaction model')
 
 with st.form(key='my_form_to_submit'):
     with st.expander("More information"):
@@ -238,18 +238,23 @@ if submit_button:
                SMI=SMILESx[cx]
                           
                mol = standardize(SMI)
-               maccskeys = MACCSkeys.GenMACCSKeys(mol)            
+               maccskeys = MACCSkeys.GenMACCSKeys(mol)     
+               rdk5fp1 = fingerprint_rdkit(mol,5,2048)
     
                if cx == 0:
 
                    with open("descriptors.csv","a") as f:
                        for o in range(0,len(maccskeys)):
                            f.write("maccs_"+str(o)+"\t")    
+                       for o in range(0,len(rdk5fp1)):
+                           f.write("rdk5fp1_"+str(o)+"\t")      
                        f.write("\n")  
                 
                with open("descriptors.csv","a") as f:
                    for o in range(0,len(maccskeys)):
                        f.write(str(maccskeys[o])+"\t") 
+                   for o in range(0,len(rdk5fp1)):
+                       f.write(str(rdk5fp1[o])+"\t")   
                    f.write("\n")
             
            process3=subprocess.Popen(["Rscript", "predict.R"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -261,16 +266,23 @@ if submit_button:
            df5 = pd.read_csv(r'results4.csv') 
            df6 = pd.read_csv(r'results5.csv') 
            
-           dfx = pd.DataFrame(columns=['Compound', "MUC2 interaction probability", "+bile"])
+           dfx = pd.DataFrame(columns=['Compound', "Mixture 1", "Mixture 2", "Mixture 3", "Mixture 4", "Isolated 1", "Isolated 2"])
            dfx["Compound"]=NAMESx
-           dfx["MUC2 interaction probability"]=(df2.iloc[:, 0].astype(float))*100
-           dfx["MUC2 interaction probability"]=dfx.iloc[:, 1].astype(int)
-
-           dfx["+bile"]=(df3.iloc[:, 0].astype(float))*100
-           dfx["+bile"]=dfx.iloc[:, 2].astype(int)
+           dfx["Mixture 1"]=(df3.iloc[:, 0].astype(float))*100
+           dfx["Mixture 1"]=dfx.iloc[:, 1].astype(int)
+           dfx["Mixture 2"]=(df4.iloc[:, 0].astype(float))*100
+           dfx["Mixture 2"]=dfx.iloc[:, 1].astype(int)
+           dfx["Mixture 3"]=(df5.iloc[:, 0].astype(float))*100
+           dfx["Mixture 3"]=dfx.iloc[:, 1].astype(int)
+           dfx["Mixture 4"]=(df6.iloc[:, 0].astype(float))*100
+           dfx["Mixture 4"]=dfx.iloc[:, 1].astype(int)
+           dfx["Isolated 1"]=(df2.iloc[:, 0].astype(float))*100
+           dfx["Isolated 1"]=dfx.iloc[:, 1].astype(int)
+           dfx["Isolated 2"]=(int(round(tcl3*100,2)))
+           dfx["Isolated 2"]=dfx.iloc[:, 1].astype(int)
     
            #dfx.reset_index(inplace=True)               
-           st.dataframe(dfx.style.applymap(cooling_highlight,subset=["MUC2 interaction probability", "+bile"]))    
+           st.dataframe(dfx.style.applymap(cooling_highlight,subset=["Mixture 1", "Mixture 2"]))    
     
     finally:
         lock.release()
