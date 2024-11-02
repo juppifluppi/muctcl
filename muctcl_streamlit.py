@@ -30,6 +30,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 from dimorphite_dl import DimorphiteDL
+from PIL import Image
+from io import BytesIO
 
 def show_mol(d2d,mol,legend='',highlightAtoms=[]):
     d2d.DrawMolecule(mol,legend=legend, highlightAtoms=highlightAtoms)
