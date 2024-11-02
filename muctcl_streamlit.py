@@ -164,7 +164,7 @@ if submit_button:
             col1, col2 = st.columns(2)
 
             with col1: 
-                style_heading = 'text-align: center'
+                style_heading = f"font-size: 15px; text-align: center;"
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(im)
@@ -202,7 +202,6 @@ if submit_button:
                 st_echarts(
                     options=options, height="500px",
                 )
-                st.markdown(f"<h1 style='{style_heading}'></h1>", unsafe_allow_html=True)
 
             col1x, col2x, col3x = st.columns(3)       
             with col1x:
