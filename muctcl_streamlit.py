@@ -187,7 +187,6 @@ if submit_button:
                 st.image("muc2.png")
                 style_heading = 'text-align: center'
                 st.markdown(f"<h1 style='{style_heading}'>MUC2</h1>", unsafe_allow_html=True)
-                st.write(int(df2.iloc[0, 0]*100))
                 st.write(int(df3.iloc[0, 0]*100))
                 st.write(int(df4.iloc[0, 0]*100))
                 st.write(int(df5.iloc[0, 0]*100))
@@ -197,26 +196,6 @@ if submit_button:
                 }
                 st_echarts(liquidfill_option2,key="3456")                                             
                 st_echarts(liquidfill_option2,key="236")                
-                liquidfill_option2 = {
-                "series": [{"type": "liquidFill", "data": [int(df3.iloc[0, 0]*1)]}]
-                }
-                st_echarts(liquidfill_option2,key="3454656")                                             
-                st_echarts(liquidfill_option2,key="24436")  
-                liquidfill_option2 = {
-                "series": [{"type": "liquidFill", "data": [int(df4.iloc[0, 0]*1)]}]
-                }
-                st_echarts(liquidfill_option2,key="34123156")                                             
-                st_echarts(liquidfill_option2,key="11236")  
-                liquidfill_option2 = {
-                "series": [{"type": "liquidFill", "data": [int(df5.iloc[0, 0]*1)]}]
-                }
-                st_echarts(liquidfill_option2,key="347856")                                             
-                st_echarts(liquidfill_option2,key="23888886")  
-                liquidfill_option2 = {
-                "series": [{"type": "liquidFill", "data": [int(df6.iloc[0, 0]*1)]}]
-                }
-                st_echarts(liquidfill_option2,key="311456")                                             
-                st_echarts(liquidfill_option2,key="221436")  
            
             for es in ["descriptors.csv","results.csv","results2.csv","results3.csv","results4.csv","results5.csv"]:
                 try:
