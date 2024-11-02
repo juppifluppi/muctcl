@@ -56,18 +56,18 @@ def cooling_highlight(val):
    color = 'green' if val > 49 else "red"                    
    return f'background-color: {color}'
 
-st.title('MUC2 interaction probability model')
+st.title('BILE/MUCIN interaction probability model')
 
 with st.form(key='my_form_to_submit'):
     with st.expander("More information"):
         
         st.caption(""":black[Background]""")
-        st.caption("""mucint predicts interactions of drugs with mucin, based on classifications derived from ¹H-NMR measurements with MUC2. It is based on a logistic regression model, using five different MACCS keys as descriptors.
-        Additionally, predictions for interactions with MUC2 in the presence of bile are listed based on a random-forest model retrained on the same descriptors.""")
+        st.caption("""muctcl predicts interactions of drugs with bile and mucin, in binary and ternary mixtures. Models are trained based on classifications derived from ¹H-NMR measurements. Binomial logistic regression models are used for classifications
+        of binary drug-bile and drug-mucin mixtures, whereas a 4-class random forest model is used for a prediction of mixtures.""")
         
-        st.caption("""The software is hosted at our [github page](https://github.com/juppifluppi/mucint), licensed under MIT.""")
+        st.caption("""The software is hosted at our [github page](https://github.com/juppifluppi/muctcl).""")
  
-        st.caption("""Version 0.1 (11.06.2024)""")
+        st.caption("""Version 1.0 (02.11.2024)""")
  
     SMI = st.text_input('Enter [SMILES code](https://pubchem.ncbi.nlm.nih.gov//edit3/index.html) of drug to load', '') 
     
