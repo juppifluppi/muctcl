@@ -234,7 +234,7 @@ if submit_button:
                     ],
                 }
                 st_echarts(
-                    options=options, height="285px",
+                    options=options, height="288px",
                 )
                 st.markdown(f"<h1 style='{style_heading}'>MUCIN PREDICTION</h1>", unsafe_allow_html=True)
                 liquidfill_option2 = {
