@@ -229,7 +229,7 @@ if submit_button:
                 )
                 st.markdown(f"<h1 style='{style_heading}'>MUCIN PREDICTION</h1>", unsafe_allow_html=True)
                 liquidfill_option2 = {
-                "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*10)/10]}]
+                "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*100)]}]
                 }
                 st_echarts(liquidfill_option2,key="3456")                                                         
                 #st.image("muc2.png",width=80)
