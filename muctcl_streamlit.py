@@ -179,7 +179,6 @@ if submit_button:
                 "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
                 }
                 st_echarts(liquidfill_option,key="23456")
-                st_echarts(liquidfill_option,key="2543456")
             with col3:
                 st.image("muc2.png")
                 style_heading = 'text-align: center'
@@ -187,8 +186,7 @@ if submit_button:
                 liquidfill_option2 = {
                 "series": [{"type": "liquidFill", "data": [int(df2.iloc[0, 0]*1)]}]
                 }
-                st_echarts(liquidfill_option2,key="3456")                                             
-                st_echarts(liquidfill_option2,key="236")                
+                st_echarts(liquidfill_option2,key="3456")                                                         
 
 
             st.write(int(df3.iloc[0, 0]*100))
