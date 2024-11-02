@@ -168,16 +168,12 @@ if submit_button:
                 st.markdown(f"<h1 style='{style_heading}'>MOLECULE</h1>", unsafe_allow_html=True)
                 im = Draw.MolToImage(Chem.MolFromSmiles(SMI),fitImage=True)
                 st.image(im)
-
-                col1x, col2x = st.columns(2)
-                with col1x:
-                    st.markdown(f"<h1 style='{style_heading}'>bile prediction</h1>", unsafe_allow_html=True)
-                    st.image("tc.png",width=100)
-                with col2x:
-                    liquidfill_option = {
-                    "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
-                    }
-                    st_echarts(liquidfill_option,key="23456")
+                st.markdown(f"<h1 style='{style_heading}'>bile prediction</h1>", unsafe_allow_html=True)
+                st.image("tc.png",width=100)
+                liquidfill_option = {
+                "series": [{"type": "liquidFill", "data": [int(round(tcl3*100,2))]}]
+                }
+                st_echarts(liquidfill_option,key="23456")
                  
             with col2: 
                 st.markdown(f"<h1 style='{style_heading}'>MIXTURE PREDICTION</h1>", unsafe_allow_html=True)
