@@ -320,7 +320,7 @@ if submit_button:
            dfx["mucin"]=dfx.iloc[:, 6].astype(int)
     
            #dfx.reset_index(inplace=True)               
-           st.caption("The following table gives the predictions (in %) of the 4-class model for each class (I = bile+mucin interacting; II = mucin interacting; III = bile interacting; IV = non-interacting). After that, the prediction for interactio with bile and mucin for isolated measurements are given.")
+           st.caption("The following table gives the predictions (in %) of the 4-class model for each class (I = bile+mucin interacting; II = mucin interacting; III = bile interacting; IV = non-interacting). After that, the prediction for interaction with bile and mucin for isolated measurements are given.")
            st.dataframe(dfx.style.applymap(cooling_highlight,subset=["bile", "mucin"]))    
 
     finally:
