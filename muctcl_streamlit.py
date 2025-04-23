@@ -104,7 +104,7 @@ with st.form(key='my_form_to_submit'):
  
         st.caption("""Version 1.0 (02.11.2024)""")
  
-    SMI = st.text_input('Enter [SMILES code](https://pubchem.ncbi.nlm.nih.gov//edit3/index.html) of drug to load', '') 
+    SMI = st.text_input('Enter [SMILES code](https://pubchem.ncbi.nlm.nih.gov//edit3/index.html) of drug to predict', '') 
 
     on3 = st.toggle('Perform batch calculation',key="16")    
     with st.expander("Batch settings"):
