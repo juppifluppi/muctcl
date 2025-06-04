@@ -26,7 +26,8 @@ from rdkit.Chem import AllChem
 from rdkit.Chem.Fingerprints import FingerprintMols
 from scopy.ScoPretreat import pretreat
 import scopy.ScoDruglikeness
-from dimorphite_dl import DimorphiteDL
+#from dimorphite_dl import DimorphiteDL
+from dimorphite_dl import protonate_smiles
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
@@ -52,13 +53,17 @@ def show_images(imgs,buffer=5):
         x += img.width + buffer
     return res
 
-dimorphite_dl = DimorphiteDL(
-    min_ph = 6.4,
-    max_ph = 6.6,
-    max_variants = 1,
-    label_states = False,
-    pka_precision = 0.1
+#dimorphite_dl = DimorphiteDL(
+#    min_ph = 6.4,
+#    max_ph = 6.6,
+#    max_variants = 1,
+#    label_states = False,
+#    pka_precision = 0.1
+#)
+dimorphite_dl: list[str] = protonate_smiles(
+    "CCC(=O)O", ph_min=6.4, ph_max=6.6, precision=0.1, max_variants=1, label_states=False
 )
+#print(f"Protonated 'CCC(=O)O': {dimorphite_dl}")
 
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
@@ -147,7 +152,8 @@ if submit_button:
             rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
             try:
-                SMIy = str(dimorphite_dl.protonate(SMI)[0])
+                #SMIy = str(dimorphite_dl.protonate(SMI)[0])
+                SMIy = str({dimorphite_dl})
                 moly = Chem.MolFromSmiles(SMIy)
                 sdm = pretreat.StandardizeMol()
                 moly = sdm.disconnect_metals(moly)
@@ -267,7 +273,8 @@ if submit_button:
                maccskeys = MACCSkeys.GenMACCSKeys(mol)     
                rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
-               SMIy = str(dimorphite_dl.protonate(SMI)[0])
+               #SMIy = str(dimorphite_dl.protonate(SMI)[0])
+               SMIy = str({dimorphite_dl})
                moly = Chem.MolFromSmiles(SMIy)
                sdm = pretreat.StandardizeMol()
                moly = sdm.disconnect_metals(moly)
