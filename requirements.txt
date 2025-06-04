@@ -9,9 +9,6 @@ numpy
 mordredcommunity
 streamlit-ketcher
 filelock
-dimorphite_dl
 padelpy
-scopy
 scipy
 streamlit-echarts
-dimorphite-dl
