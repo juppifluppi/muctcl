@@ -12,3 +12,5 @@ filelock
 padelpy
 scipy
 streamlit-echarts
+scopy
+dimorphite_dl
