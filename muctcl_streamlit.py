@@ -53,16 +53,16 @@ def show_images(imgs,buffer=5):
         x += img.width + buffer
     return res
 
-#dimorphite_dl = DimorphiteDL(
-#    min_ph = 6.4,
-#    max_ph = 6.6,
-#    max_variants = 1,
-#    label_states = False,
-#    pka_precision = 0.1
-#)
-dimorphite_dl: list[str] = protonate_smiles(
-    "CCC(=O)O", ph_min=6.4, ph_max=6.6, precision=0.1, max_variants=1, label_states=False
+dimorphite_dl = DimorphiteDL(
+    min_ph = 6.4,
+    max_ph = 6.6,
+    max_variants = 1,
+    label_states = False,
+    pka_precision = 0.1
 )
+#dimorphite_dl: list[str] = protonate_smiles(
+#    "CCC(=O)O", ph_min=6.4, ph_max=6.6, precision=0.1, max_variants=1, label_states=False
+#)
 #print(f"Protonated 'CCC(=O)O': {dimorphite_dl}")
 
 def cooling_highlight(val):
