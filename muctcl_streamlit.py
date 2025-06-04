@@ -26,7 +26,6 @@ from rdkit.Chem import AllChem
 from rdkit.Chem.Fingerprints import FingerprintMols
 from scopy.ScoPretreat import pretreat
 import scopy.ScoDruglikeness
-#from dimorphite_dl import DimorphiteDL
 from dimorphite_dl import protonate_smiles
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -53,29 +52,6 @@ def show_images(imgs,buffer=5):
         x += img.width + buffer
     return res
 
-#def run_dimorphite_dl(SMI):
-#    result = subprocess.run(
-#        ["dimorphite_dl", "--ph_min", "6.4", "--ph_max", "6.6", "--precision", "0.1", "--max_variants", "1", "--silent"],
-#        input=SMI.encode(),  # pass SMI as input
-#        stdout=subprocess.PIPE,
-#        stderr=subprocess.PIPE,
-#    )
-#    if result.returncode != 0:
-#        raise RuntimeError(f"Dimorphite-DL failed: {result.stderr.decode()}")
-#    return result.stdout.decode().strip()
-
-#dimorphite_dl = DimorphiteDL(
-#    min_ph = 6.4,
-#    max_ph = 6.6,
-#    max_variants = 1,
-#    label_states = False,
-#    pka_precision = 0.1
-#)
-#dimorphite_dl: list[str] = protonate_smiles(
-#    "CCC(=O)O", ph_min=6.4, ph_max=6.6, precision=0.1, max_variants=1, label_states=False
-#)
-#print(f"Protonated 'CCC(=O)O': {dimorphite_dl}")
-
 def run_dimorphite(SMI):
     command = [
         "dimorphite_dl",
@@ -84,7 +60,7 @@ def run_dimorphite(SMI):
         "--precision", "0.1",
         "--max_variants", "1",
         "--silent",
-        SMI  # This is the required positional argument
+        SMI
     ]
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
@@ -97,7 +73,7 @@ def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
    return f'background-color: {color}'
 def highlight_max(s):
-    is_max = s == s.max() # Create a boolean Series where the max value is True
+    is_max = s == s.max()
     return ['background-color: green' if v else '' for v in is_max]
 
 calc = Calculator(descriptors, ignore_3D=False)
@@ -134,7 +110,7 @@ with st.form(key='my_form_to_submit'):
         
         st.caption("""The software is hosted at our [github page](https://github.com/juppifluppi/muctcl).""")
  
-        st.caption("""Version 1.0 (02.11.2024)""")
+        st.caption("""Version 1.1 (04.06.2025)""")
  
     SMI = st.text_input('Enter [SMILES code](https://pubchem.ncbi.nlm.nih.gov//edit3/index.html) of drug to predict', '') 
 
@@ -180,7 +156,6 @@ if submit_button:
             rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
             try:
-                #SMIy = str(dimorphite_dl.protonate(SMI)[0])
                 SMIy = run_dimorphite(SMI)
                 moly = Chem.MolFromSmiles(SMIy)
                 sdm = pretreat.StandardizeMol()
@@ -301,7 +276,6 @@ if submit_button:
                maccskeys = MACCSkeys.GenMACCSKeys(mol)     
                rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
-               #SMIy = str(dimorphite_dl.protonate(SMI)[0])
                SMIy = run_dimorphite(SMI)
                moly = Chem.MolFromSmiles(SMIy)
                sdm = pretreat.StandardizeMol()
@@ -352,8 +326,7 @@ if submit_button:
            dfx["bile"]=dfx.iloc[:, 5].astype(int)
            dfx["mucin"]=(df2.iloc[:, 0].astype(float))*100
            dfx["mucin"]=dfx.iloc[:, 6].astype(int)
-    
-           #dfx.reset_index(inplace=True)               
+               
            st.caption("The following table gives the predictions (in %) of the 4-class model for each class (I = bile+mucin interacting; II = mucin interacting; III = bile interacting; IV = non-interacting). After that, the prediction for interaction with bile and mucin for isolated measurements are given.")
            st.dataframe(dfx.style.applymap(cooling_highlight,subset=["bile", "mucin"]))    
 
