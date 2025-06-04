@@ -53,16 +53,16 @@ def show_images(imgs,buffer=5):
         x += img.width + buffer
     return res
 
-def run_dimorphite_dl(SMI):
-    result = subprocess.run(
-        ["dimorphite_dl", "--ph_min", "6.4", "--ph_max", "6.6", "--precision", "0.1", "--max_variants", "1", "--silent"],
-        input=SMI.encode(),  # pass SMI as input
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"Dimorphite-DL failed: {result.stderr.decode()}")
-    return result.stdout.decode().strip()
+#def run_dimorphite_dl(SMI):
+#    result = subprocess.run(
+#        ["dimorphite_dl", "--ph_min", "6.4", "--ph_max", "6.6", "--precision", "0.1", "--max_variants", "1", "--silent"],
+#        input=SMI.encode(),  # pass SMI as input
+#        stdout=subprocess.PIPE,
+#        stderr=subprocess.PIPE,
+#    )
+#    if result.returncode != 0:
+#        raise RuntimeError(f"Dimorphite-DL failed: {result.stderr.decode()}")
+#    return result.stdout.decode().strip()
 
 #dimorphite_dl = DimorphiteDL(
 #    min_ph = 6.4,
@@ -164,7 +164,7 @@ if submit_button:
 
             try:
                 #SMIy = str(dimorphite_dl.protonate(SMI)[0])
-                SMIy = str(run_dimorphite_dl(SMI))
+                SMIy = str(os.system("dimorphite_dl --ph_min 6.4 --ph_max 6.6 --precision 0.1 --max_variants 1 --silent "+SMI))
                 moly = Chem.MolFromSmiles(SMIy)
                 sdm = pretreat.StandardizeMol()
                 moly = sdm.disconnect_metals(moly)
@@ -285,7 +285,7 @@ if submit_button:
                rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
                #SMIy = str(dimorphite_dl.protonate(SMI)[0])
-               SMIy = str(run_dimorphite_dl(SMI))
+               SMIy = str(os.system("dimorphite_dl --ph_min 6.4 --ph_max 6.6 --precision 0.1 --max_variants 1 --silent "+SMI))
                moly = Chem.MolFromSmiles(SMIy)
                sdm = pretreat.StandardizeMol()
                moly = sdm.disconnect_metals(moly)
