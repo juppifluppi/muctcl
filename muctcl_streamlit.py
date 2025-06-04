@@ -26,11 +26,10 @@ from rdkit.Chem import AllChem
 from rdkit.Chem.Fingerprints import FingerprintMols
 from scopy.ScoPretreat import pretreat
 import scopy.ScoDruglikeness
-from dimorphite_dl import DimorphiteDL
+#from dimorphite_dl import DimorphiteDL
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-from dimorphite_dl import DimorphiteDL
 from PIL import Image
 from io import BytesIO
 
@@ -53,13 +52,13 @@ def show_images(imgs,buffer=5):
         x += img.width + buffer
     return res
 
-dimorphite_dl = DimorphiteDL(
-    min_ph = 6.4,
-    max_ph = 6.6,
-    max_variants = 1,
-    label_states = False,
-    pka_precision = 0.1
-)
+#dimorphite_dl = DimorphiteDL(
+#    min_ph = 6.4,
+#    max_ph = 6.6,
+#    max_variants = 1,
+#    label_states = False,
+#    pka_precision = 0.1
+#)
 
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
