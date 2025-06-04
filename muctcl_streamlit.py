@@ -164,7 +164,7 @@ if submit_button:
 
             try:
                 #SMIy = str(dimorphite_dl.protonate(SMI)[0])
-                SMIy = run_dimorphite_dl(SMI)
+                SMIy = str(run_dimorphite_dl(SMI))
                 moly = Chem.MolFromSmiles(SMIy)
                 sdm = pretreat.StandardizeMol()
                 moly = sdm.disconnect_metals(moly)
@@ -285,7 +285,7 @@ if submit_button:
                rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
                #SMIy = str(dimorphite_dl.protonate(SMI)[0])
-               SMIy = run_dimorphite_dl(SMI)
+               SMIy = str(run_dimorphite_dl(SMI))
                moly = Chem.MolFromSmiles(SMIy)
                sdm = pretreat.StandardizeMol()
                moly = sdm.disconnect_metals(moly)
