@@ -26,7 +26,7 @@ from rdkit.Chem import AllChem
 from rdkit.Chem.Fingerprints import FingerprintMols
 from scopy.ScoPretreat import pretreat
 import scopy.ScoDruglikeness
-from dimorphite_dl import protonate_smiles
+from dimorphite_dl import DimorphiteDL
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
