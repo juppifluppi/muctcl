@@ -14,4 +14,4 @@ padelpy
 scopy
 scipy
 streamlit-echarts
-dimorphite-dl==1.1
+dimorphite-dl
