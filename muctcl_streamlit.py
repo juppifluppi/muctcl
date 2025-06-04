@@ -76,6 +76,11 @@ def show_images(imgs,buffer=5):
 #)
 #print(f"Protonated 'CCC(=O)O': {dimorphite_dl}")
 
+def run_dimorphite_inline(SMI):
+    command = f'echo "{SMI}" | dimorphite_dl --ph_min 6.4 --ph_max 6.6 --precision 0.1 --max_variants 1 --silent'
+    result = subprocess.check_output(command, shell=True, text=True)
+    return result.strip()
+
 def cooling_highlight(val):
    color = "red" if val < 50 else "green"                    
    return f'background-color: {color}'
@@ -164,7 +169,7 @@ if submit_button:
 
             try:
                 #SMIy = str(dimorphite_dl.protonate(SMI)[0])
-                SMIy = str(os.system("dimorphite_dl --ph_min 6.4 --ph_max 6.6 --precision 0.1 --max_variants 1 --silent "+SMI))
+                SMIy = run_dimorphite_inline(SMI)
                 moly = Chem.MolFromSmiles(SMIy)
                 sdm = pretreat.StandardizeMol()
                 moly = sdm.disconnect_metals(moly)
@@ -285,7 +290,7 @@ if submit_button:
                rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
                #SMIy = str(dimorphite_dl.protonate(SMI)[0])
-               SMIy = str(os.system("dimorphite_dl --ph_min 6.4 --ph_max 6.6 --precision 0.1 --max_variants 1 --silent "+SMI))
+               SMIy = run_dimorphite_inline(SMI)
                moly = Chem.MolFromSmiles(SMIy)
                sdm = pretreat.StandardizeMol()
                moly = sdm.disconnect_metals(moly)
