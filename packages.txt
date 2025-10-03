@@ -8,3 +8,4 @@ r-cran-randomforest
 libgdal32
 libodbc2
 libodbcinst2
+unixodbc-common
