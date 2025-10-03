@@ -1,4 +1,2 @@
 default-jre-headless
 libxrender1
-r-cran-randomforest
-r-cran-devtools
