@@ -1,4 +1,4 @@
-streamlit==1.35.0
+streamlit
 rdkit
 stmol
 pandas
@@ -14,3 +14,4 @@ scipy
 streamlit-echarts
 scopy
 dimorphite_dl
+pyodbc
