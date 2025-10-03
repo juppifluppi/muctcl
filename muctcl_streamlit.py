@@ -33,6 +33,19 @@ import numpy as np
 from PIL import Image
 from io import BytesIO
 
+def ensure_r_pkgs():
+    try:
+        subprocess.run(
+            ["Rscript", "bootstrap_r.R"],
+            check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+        )
+    except subprocess.CalledProcessError as e:
+        # surface the R output if something fails
+        print(e.stdout)
+        sys.exit("Failed installing R packages (caret and deps).")
+
+ensure_r_pkgs()
+
 def show_mol(d2d,mol,legend='',highlightAtoms=[]):
     d2d.DrawMolecule(mol,legend=legend, highlightAtoms=highlightAtoms)
     d2d.FinishDrawing()
