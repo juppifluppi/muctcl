@@ -155,20 +155,20 @@ if submit_button:
             maccskeys = MACCSkeys.GenMACCSKeys(mol)     
             rdk5fp1 = fingerprint_rdkit(mol,5,2048)
 
-            try:
-                SMIy = run_dimorphite(SMI)
-                moly = Chem.MolFromSmiles(SMIy)
-                sdm = pretreat.StandardizeMol()
-                moly = sdm.disconnect_metals(moly)
-                logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(moly)
-                mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(moly)    
-                tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
-                tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
-                tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )   
+            #try:
+            SMIy = run_dimorphite(SMI)
+            moly = Chem.MolFromSmiles(SMIy)
+            sdm = pretreat.StandardizeMol()
+            moly = sdm.disconnect_metals(moly)
+            logd = scopy.ScoDruglikeness.molproperty.CalculateLogD(moly)
+            mr = scopy.ScoDruglikeness.molproperty.CalculateMolMR(moly)    
+            tcl1 = ( ( logd - 1.510648) / 1.708574 ) * 1.706694
+            tcl2 = ( ( mr - 90.62889 ) / 35.36033 ) * 2.4925333    
+            tcl3 = 1 / ( 1 + ( 2.718281828459045 ** ( -1 * ( 0.9872289 + tcl1 + tcl2 ) ) ) )   
 
-            except:
-                st.write("Something is wrong with your SMILES code.")
-                st.stop()
+            #except:
+            #    st.write("Something is wrong with your SMILES code.")
+            #    st.stop()
            
             with open("descriptors.csv","a") as f:
                 for o in range(0,len(maccskeys)):
