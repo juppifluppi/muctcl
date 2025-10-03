@@ -1,16 +1,1 @@
-streamlit==1.35.0
-rdkit
-stmol
-pandas
-matplotlib
-scipy
-seaborn
-numpy
-mordredcommunity
-streamlit-ketcher
-filelock
-padelpy
-scipy
-streamlit-echarts
-scopy
-dimorphite_dl
+
