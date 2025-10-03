@@ -2,3 +2,4 @@ default-jre-headless
 libxrender1
 r-cran-randomforest
 r-base
+r-cran-caret
