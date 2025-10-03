@@ -1,10 +1,1 @@
-libxrender1
-r-base
-r-base-dev
-r-base-core
-r-cran-caret
 default-jre-headless
-r-cran-randomforest
-unixodbc
-unixodbc-dev
-g++
