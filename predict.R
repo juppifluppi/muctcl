@@ -1,4 +1,4 @@
-#library("caret")
+library("caret")
 library("randomForest")
 
 data=read.table("descriptors.csv",header=T)
