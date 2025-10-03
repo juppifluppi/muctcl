@@ -9,3 +9,6 @@ libgdal32
 libodbc2
 libodbcinst2
 unixodbc-common
+unixodbc
+unixodbc-dev
+g++
