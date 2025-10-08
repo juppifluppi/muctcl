@@ -1,0 +1,6 @@
+html_format             R Markdown output formats
+mark                    Render Markdown to an output format
+markdown_options        Markdown rendering options
+markdown-package        Markdown rendering for R
+rpubsUpload             Upload an HTML file to RPubs
+smartypants             Convert some ASCII strings to HTML entities

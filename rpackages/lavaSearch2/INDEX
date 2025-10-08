@@ -1,0 +1,75 @@
+addLink                 Add a New Link Between Two Variables in a LVM
+autoplot_calibrateType1
+                        Graphical Display of the Bias or Type 1 Error
+autoplot.intDensTri     2D-display of the Domain Used to Compute the
+                        Integral
+autplot-modelsearch2    Display the Value of a Coefficient across the
+                        Steps.
+calcDistMax             Adjust the p.values Using the Quantiles of the
+                        Max Statistic
+calcType1postSelection
+                        Compute the Type 1 Error After Selection
+                        [EXPERIMENTAL]
+calibrateType1          Simulation Study Assessing Bias and Type 1
+                        Error
+checkData               Check that Validity of the Dataset
+clean                   Simplify a lvm object
+coef2                   Model Coefficients With Small Sample Correction
+coefByType              Extract the Coefficient by Type
+coefType                Extract the Type of Each Coefficient
+combineFormula          Combine formula
+compare2                Test Linear Hypotheses With Small Sample
+                        Correction
+confint2                Confidence Intervals With Small Sample
+                        Correction
+convFormulaCharacter    formula character conversion
+createContrast          Create Contrast matrix
+dfSigma                 Degree of Freedom for the Chi-Square Test
+effects2                Effects Through Pathways With Small Sample
+                        Correction
+extractData             Extract Data From a Latent Variable Model
+findNewLink             Find all New Links Between Variables
+gaussian_weight         Estimate LVM With Weights
+getNewLink              Extract the Links that Have Been Found by the
+                        modelsearch2.
+getNewModel             Extract the Model that Has Been Retains by the
+                        modelsearch2.
+getStep                 Extract one Step From the Sequential Procedure
+getVarCov2              Residual Variance-Covariance Matrix With Small
+                        Sample Correction.
+glht2                   General Linear Hypothesis Testing With Small
+                        Sample Correction
+hessian2                Hessian With Small Sample Correction.
+iid2                    Influence Function With Small Sample
+                        Correction.
+iid2plot                Display the i.i.d. Decomposition
+iidJack                 Jackknife iid Decomposition from Model Object
+information2            Expected Information With Small Sample
+                        Correction.
+initVarLink             Normalize var1 and var2
+intDensTri              Integrate a Gaussian/Student Density over a
+                        Triangle
+lavaSearch2             Tools for Model Specification in the Latent
+                        Variable Framework
+leverage2               Leverage With Small Sample Correction.
+matrixPower             Power of a Matrix
+modelsearch2            Data-driven Extension of a Latent Variable
+                        Model
+nobs2                   Effective Sample Size.
+nStep                   Find the Number of Steps Performed During the
+                        Sequential Testing
+residuals2              Residuals With Small Sample Correction.
+sampleRepeated          Simulate Repeated Measurements over time
+score2                  Score With Small Sample Correction
+sCorrect                Depreciated Method For Small Sample Correction
+setLink                 Set a Link to a Value
+summary.calibrateType1
+                        Display the Type 1 Error Rate
+summary.glht2           Outcome of Linear Hypothesis Testing
+summary.modelsearch2    summary Method for modelsearch2 Objects
+summary2                Latent Variable Model Summary After Small
+                        Sample Correction
+transformSummaryTable   Apply Transformation to Summary Table
+tryWithWarnings         Run an Expression and Catch Warnings and Errors
+vcov2                   Variance-Covariance With Small Sample
+                        Correction

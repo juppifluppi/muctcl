@@ -1,0 +1,78 @@
+acut                    Automatic selection and formatting of breaks in
+                        'cut'
+ci.mean                 Compute mean values with confidence intervals
+ci.mean.default         Compute mean values with confidence intervals
+CiTable                 CiTable data
+coxphSeries             Run a series of Cox regression models
+Diabetes                Diabetes data of Dr John Schorling
+fixRegressionTable      Expand regression coefficient table
+followupTable           Summary tables for a given followup time point.
+formatCI                Formatting confidence intervals
+glmSeries               Run a series of generalized linear regression
+                        analyses
+labelUnits              labelUnits
+lazyDateCoding          Efficient coding of date variables
+lazyFactorCoding        Efficient coding of factor levels
+org                     Wrapper function for publish with output format
+                        org
+parseInteractionTerms   Parse interaction terms
+plot.ci                 Plot confidence intervals
+plot.regressionTable    Plotting regression coefficients with
+                        confidence limits
+plot.subgroupAnalysis   plot.subgroupAnalysis
+plotConfidence          Plot confidence intervals
+print.ci                Print confidence intervals
+print.regressionTable   printing regression tables
+print.subgroupAnalysis
+                        Printing univariate tables
+print.table2x2          print results of 2x2 contingency table analysis
+print.univariateTable   Printing univariate tables
+pubformat               Format numbers for publication
+publish                 Publishing tables and figures
+publish.CauseSpecificCox
+                        Tabulizing cause-specific hazard ratio from all
+                        causes with confidence limits and Wald test
+                        p-values.
+publish.ci              Publish tables with confidence intervals
+publish.coxph           Tabulize hazard ratios with confidence
+                        intervals and p-values.
+publish.glm             Tabulize regression coefficients with
+                        confidence intervals and p-values.
+publish.htest           Pretty printing of test results.
+publish.matrix          Publishing a matrix in raw, org, latex, or muse
+                        format
+publish.MIresult        Present logistic regression and Cox regression
+                        obtained with mitools::MIcombine based on
+                        smcfcs::smcfcs multiple imputation analysis
+publish.riskReclassification
+                        Publishing riskReclassification objects
+publish.riskRegression
+                        Publishing results of riskRegression
+publish.Score           Publish predictive accuracy results
+publish.summary.aov     Format summary table of aov results
+publish.survdiff        Alternative summary of survdiff results
+regressionTable         Regression table
+SpaceT                  A study was made of all 26 astronauts on the
+                        first eight space shuttle flights (Bungo
+                        et.al., 1985). On a voluntary basis 17
+                        astronauts consumed large quantities of salt
+                        and fluid prior to landing as a countermeasure
+                        to space deconditioning, while nine did not.
+spaghettiogram          Spaghettiogram
+specialFrame            Special frame
+splinePlot.lrm          Plot predictions of logistic regression
+stripes                 Background and grid color control.
+subgroupAnalysis        Subgroup Analysis - Interactions and estimates
+summary.ci              Summarize confidence intervals
+summary.regressionTable
+                        Formatting regression tables
+summary.subgroupAnalysis
+                        summary.subgroupAnalysis
+summary.univariateTable
+                        Preparing univariate tables for publication
+sutable                 Fast summary of a univariate table
+table2x2                2x2 table calculus for teaching
+trace                   trace data
+traceR                  traceR data
+Units                   Add units to data set
+univariateTable         Univariate table

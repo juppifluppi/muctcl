@@ -1,0 +1,1436 @@
+\documentclass[article, nojss]{jss}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\VignetteIndexEntry{logcondens: Computations Related to Univariate Log-Concave Density Estimation (Duembgen and Rufibach, 2011, Journal of Statistical Software, 39(6), 1-28.)}                                          
+%\VignetteKeywords{logcondens}                                                                   
+%\VignetteDepends{logcondens}                                      
+%\VignettePackage{logcondens} 
+
+%% almost as usual
+\author{Lutz D\"{u}mbgen\\University of Bern \And Kaspar Rufibach\\University of Zurich}
+\title{{\pkg{logcondens}}: Computations Related to Univariate Log-Concave Density Estimation}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Lutz D\"{u}mbgen, Kaspar Rufibach} %% comma-separated
+\Plaintitle{logcondens: Computations Related to Univariate Log-Concave Density Estimation} %% without formatting
+\Shorttitle{{\pkg{logcondens}}: Computations Related to Univariate Log-Concave Density Estimation}
+
+%% an abstract and keywords
+\Abstract{
+Maximum likelihood estimation of a log-concave density has attracted considerable attention over the last few years. Several algorithms have been proposed to estimate such a density. Two of those algorithms, an iterative convex minorant and an active set algorithm, are implemented in the \proglang{R} package \pkg{logcondens}. While these algorithms are discussed elsewhere, we describe in this paper the use of the \pkg{logcondens} package and discuss functions and datasets related to log-concave density estimation contained in the package. In particular, we provide functions to (1) compute the maximum likelihood estimate (MLE) as well as a smoothed log-concave density estimator derived from the MLE, (2) evaluate the estimated density, distribution and quantile functions at arbitrary points, (3) compute the characterizing functions of the MLE, (4) sample from the estimated distribution, and finally (5) perform a two-sample permutation test using a modified Kolmogorov-Smirnov test statistic. In addition, \pkg{logcondens} makes two datasets available that have been used to illustrate log-concave density estimation.
+}
+\Keywords{log-concave, density estimation, Kolmogorov-Smirnov test, \proglang{R}}
+\Plainkeywords{log-concave, density estimation, R} %% without formatting
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+\Volume{39}
+\Issue{6}
+\Month{March}
+\Year{2011}
+\Submitdate{2009-11-12}
+\Acceptdate{2010-10-06}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Lutz D\"umbgen \\
+  Institute of Mathematical Statistics and Actuarial Science \\
+  University of Bern \\
+  3012 Bern, Switzerland \\
+  Telephone: +41/0/31631-8802 \\
+  Fax: +41/0/31631-3805 \\
+  E-mail: \email{duembgen@stat.unibe.ch} \\
+  URL: \url{http://www.staff.unibe.ch/duembgen}
+
+\bigskip
+
+  Kaspar Rufibach\\
+  Biostatistics Unit\\
+  Institute for Social and Preventive Medicine\\
+  University of Zurich\\
+  8001 Zurich, Switzerland\\
+  Telephone: +41/0/44634-4643 \\
+  Fax: +41/0/44634-4386 \\
+  E-mail: \email{kaspar.rufibach@ifspm.uzh.ch}\\
+  URL: \url{http://www.biostat.uzh.ch/aboutus/people/rufibach.html}
+}
+
+%% It is also possible to add a telephone and fax number
+%% before the e-mail in the following format:
+%% Telephone: +43/1/31336-5053
+%% Fax: +43/1/31336-734
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{latexsym}
+\usepackage{thumbpdf}
+
+
+\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{example}[theorem]{Example}
+
+\newenvironment{Theorem}{\begin{theorem}\sl}{\end{theorem}}
+%\newenvironment{Lemma}{\begin{lemma}\sl}{\end{lemma}}
+%\newenvironment{Corollary}{\begin{corollary}\sl}{\end{corollary}}
+%\newenvironment{Proposition}{\begin{proposition}\sl}{\end{proposition}}
+%\newenvironment{Example}{\begin{example}\rm}{\end{example}}
+
+\def\bea{\begin{eqnarray*}}
+\def\eea{\end{eqnarray*}}
+\def\be{\begin{equation}}
+\def\ee{\end{equation}}
+\def\bean{\begin{eqnarray}}
+\def\eean{\end{eqnarray}}
+\def\barr{\begin{array}}
+\def\earr{\end{array}}
+\def\bdes{\begin{description}}
+\def\edes{\end{description}}
+\def\bi{\begin{itemize}}
+\def\ei{\end{itemize}}
+
+\def\hat{\widehat}
+\def\R{\mathbb{R}}
+\def\est{\widehat{f}}            
+\def\lest{\widehat{\varphi}}    
+\def\dest{\widehat{F}}           
+\def\SS{\mathcal{S}}             
+\newcommand{\ED}{\mathbb{F}}     
+\def\d{\, \mathrm{d}}           
+\def\Del{\Delta}
+\def\Bl{\Bigl}
+\def\Br{\Bigr}
+\newcommand{\ve}[1]{\mathbf{#1}}
+\def\Var{\mathop{\rm Var}\nolimits}
+\def\argmax{\mathop{\rm arg\,max}}
+\def\PP{{\cal P}}
+\def\II{{\cal I}}
+\def\KK{{\cal K}}
+\def\RR{{\cal R}}
+\newcommand{\SupN}[1]{\Vert #1 \Vert_\infty}  
+
+\SweaveOpts{keep.source = TRUE}
+\SweaveOpts{prefix.string = plots/}
+
+<<label = init, echo = FALSE>>=
+options(prompt = "R> ", continue = "+  ", width = 75, digits = 4)
+
+if (require(logcondens) == FALSE) {
+  install.packages("logcondens")
+  library("logcondens")
+}
+
+data("reliability")
+
+set.seed(1)
+n.sim <- 40
+x.sim <- sort(rnorm(n.sim))
+@ 
+
+
+
+
+
+% =========== Here, the actual document begins ======================
+\begin{document}
+
+%% include your article here, just as usual
+%% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
+
+%\input{todo.tex}
+
+% -----------------------------------------------------
+\section{Introduction}
+\label{sec: intro}
+% -----------------------------------------------------
+
+% -----------------------------------------------------
+\subsection{About this document}\label{sec:about}
+% -----------------------------------------------------
+
+Although first uploaded to CRAN in 2006, a detailed description (beyond the package manual) of the functionality of the \proglang{R} package \pkg{logcondens} 
+\citep{logcondens} had been lacking so far. This document is an introduction to \pkg{logcondens}, based on \cite{duembgen_logcon10}, that not only discusses 
+and illustrates the use of the implemented iterative convex minorant ({\bf ICMA}) and the active set algorithm ({\bf ASA}), but more functions that are useful in connection with univariate log-concave density estimation.
+The package also provides functions to evaluate quantities whose explicit computations are not immediate, such as distribution and quantile functions, the smoothed log-concave density estimator and the corresponding distribution function, sampling from the different estimators, and a two-sample permutation test.
+In addition, the data sets analyzed in \cite{duembgen_09} and \cite{mizera_09} are provided as part of \pkg{logcondens}. Using the former of these datasets we illustrate how \pkg{logcondens} can be used to explore data. The package is available from the Comprehensive \proglang{R} Archive Network at \url{http://CRAN.R-project.org/package=logcondens}.
+
+This document was created using \code{Sweave} \citep{leisch_02}, \LaTeX{} \citep{knuth_84, lamport_94}, and \proglang{R} \citep{R}. This means that all of the code has been checked by \proglang{R}.
+
+
+% -----------------------------------------------------
+\subsection{Log-concave density estimation}
+\label{sec: intro LC}
+% -----------------------------------------------------
+
+One way to nonparametrically estimate a density from univariate i.i.d. data is imposing a qualitative constraint such as monotonicity, convexity, 
+or log-concavity. In contrast to smoothing methods such as kernel estimation or roughness penalization, methods
+relying on shape constraints are fully automatic, i.e.\ they do not necessitate any choice of tuning parameters such 
+as a bandwidth or a penalty 
+parameter. Choosing these tuning parameters is notoriously involved, since typically their optimal values depend on properties of the unknown density to be estimated. To fix notation, let $f$ be a probability density on $\R$. We call $f$ {\it log-concave} if it may be written as 
+$$
+    f(x) \ = \ \exp \varphi(x)
+$$
+for some concave function $\varphi: \R \to [-\infty, \infty)$. Based on a sample of i.i.d.\ random variables $X_1, \ldots, X_n \in \R$ from $f$ we seek to estimate this density via maximizing the normalized log-likelihood function
+$$
+    \ell(\varphi)
+    \ = \ n^{-1} \sum_{i=1}^n \log f(X_i)
+    \ = \ n^{-1} \sum_{i=1}^n \varphi(X_i)
+$$
+over all concave functions $\varphi: \R \to [-\infty, \infty)$ such that $\int \exp \varphi(x) \d x = 1$. The resulting maximum likelihood estimators (MLEs) of $\varphi$ and $f$
+are denoted by $\lest$ and $\est = \exp \lest$, respectively.
+
+\cite{duembgen_09} show that the maximizer $\lest$ of $\ell$ is unique, piecewise linear on the interval $[X_{(1)}, X_{(n)}]$ with knots only at (some of the) observations $X_{(i)}$, and $\lest = - \infty$ elsewhere. Here $X_{(1)} \le X_{(2)} \le \cdots \le X_{(n)}$ are the ordered observations, and a ``knot'' of $\lest$ is a location where this function changes slope. The MLEs $\lest$, $\est$ and $\dest$ are consistent with certain rates of convergence, see \cite{duembgen_09} and \cite{balabdaoui_09}.
+
+The merits of using a log-concave density have been extensively described in \cite{balabdaoui_09}, \cite{cule_09}, and \cite{walther_08}. The most relevant properties, in our opinion, are:
+%
+\begin{itemize}
+\item Many parametric models consist of log--concave densities, at least for large parts of the parameter space. Examples include: Normal, Uniform, $\text{Gamma}(r,\lambda)$ for $r\ge 1$, $\text{Beta}(a,b)$ for $a,b \ge 1$, generalized Pareto, Gumbel, Fr\'{e}chet, logistic or Laplace, to mention only some of these models.
+Therefore, assuming log--concavity  offers a flexible non--parametric alternative to purely parametric models. Note that a log--concave density need not be symmetric. 
+%
+\item Given that log-concavity seems to be a plausible assumption for many datasets one encounters in applications, we also advocate the use of this package in routine data analysis. Instead of looking at a histogram (via \code{hist()}) or a kernel density estimate when exploring data we propose to additionally display the log-concave estimate, or its smoothed version described below, to get an idea about the distribution of the data. Especially for small sample sizes, kernel estimates are prone to artifacts, but assuming additional structure on the underlying distribution reduces the influence of single observations on the estimated density. To illustrate this point we added the estimate resulting from invoking \code{density()} to Figure~\ref{fig: simul} (black line).
+%
+\item Every log--concave density is automatically unimodal. 
+%
+\item The nonparametric MLE of a continuous unimodal density does not exist (see e.g.\ \citealp{birge_97}) but the nonparametric MLE of a log-concave density does. Thus the class of log-concave densities may be a useful and valuable surrogate for the larger class of unimodal densities. 
+%
+\item Using a standard EM algorithm, mixtures with log-concave component densities can be computed, 
+see \cite{chang_07} and \cite{cule_08}.
+%
+\item Log-concavity turns out to be a valuable assumption in dimensions higher than 1 as well, see
+\cite{cule_09, cule_08, mizera_09, schuhmacher_09, seregin_09}.
+\end{itemize}
+
+Figure~\ref{fig: simul} provides an introductory example based on simulated data. Namely, we generated a random sample of size $n = \Sexpr{n.sim}$ from a standard normal distribution (the corresponding density function is in fact log-concave) and estimated the density of these observations under a log-concavity restriction. In the left plot of Figure~\ref{fig: simul} we provide plots of the true density the observations are sampled from, the estimated density, and the kernel density estimate as provided by \code{density()}.
+Given the small sample size of $n = \Sexpr{n.sim}$, both the log-concave and kernel estimate capture the shape of the truth quite accurately. The features of the log-concave MLE are visible: The support of $\est$ is $[X_{(1)}, X_{(n)}]$ and the knots, marked by vertical lines at the bottom of the plot, are indeed at some of the observations. On the other hand, the notorious bumpy behavior of the kernel estimate appears in the tails, especially on the left hand side. Piecewise linearity of the estimated log-density is visualized in the right plot of Figure~\ref{fig: simul}.
+
+We will illustrate the main functions of \pkg{logcondens} on this simulated dataset and then discuss their merits in analyzing a real-world dataset.
+To generate the data, invoke:
+
+<<label = genSimul, results = verbatim, echo = TRUE, eval = FALSE>>=
+library("logcondens")
+set.seed(1)
+n.sim <- 40
+x.sim <- sort(rnorm(n.sim))
+@
+
+Then, we compute and display the log-concave density estimate, the density we sampled from, and a standard kernel estimate:
+
+<<label = compSimul, results = verbatim, echo = TRUE, eval = FALSE>>=
+res <- logConDens(x.sim, smoothed = FALSE, print = FALSE)
+xs <- seq(-5, 5, by = 0.01)
+f.true <- dnorm(xs)
+par(
+  las = 1, oma = c(0, 0, 3, 0), mar = c(3, 3.5, 0.5, 0.5),
+  mfrow = c(1, 2)
+)
+plot(res, which = "density", add.title = FALSE, legend.pos = "none")
+title(
+  main = "Log-concave density estimation from i.i.d. data",
+  outer = TRUE
+)
+mtext("Dashed vertical lines indicate knots of the log-density", 3,
+  outer = TRUE
+)
+lines(xs, f.true, col = 4, lwd = 2)
+lines(density(x.sim), lwd = 2)
+legend("topleft", c("Kernel", "Estimated", "True"),
+  lty = 1, lwd = 2,
+  col = c(1, 2, 4), bty = "n"
+)
+plot(res, which = "log-density", add.title = FALSE, legend.pos = "none")
+lines(xs, log(f.true), col = 4, lwd = 2)
+@ 
+
+\begin{figure}[t!]
+\begin{center}
+\setkeys{Gin}{width=\textwidth}
+<<label = plotSimul, eval = TRUE, fig = TRUE, echo = FALSE, width = 8, height = 5>>=
+res <- logConDens(x.sim, smoothed = FALSE, print = FALSE)
+xs <- seq(-5, 5, by = 0.01)
+f.true <- dnorm(xs)
+par(
+  las = 1, oma = c(0, 0, 3, 0), mar = c(3, 3.5, 0.5, 0.5),
+  mfrow = c(1, 2)
+)
+plot(res, which = "density", add.title = FALSE, legend.pos = "none")
+title(main = "Log-concave density estimation from i.i.d. data", outer = TRUE)
+mtext("Dashed vertical lines indicate knots of the log-density", 3, outer = TRUE)
+lines(xs, f.true, col = 4, lwd = 2)
+lines(density(x.sim), lwd = 2)
+legend("topleft", c("Kernel", "Estimated", "True"),
+  lty = 1, lwd = 2,
+  col = c(1, 2, 4), bty = "n"
+)
+plot(res, which = "log-density", add.title = FALSE, legend.pos = "none")
+lines(xs, log(f.true), col = 4, lwd = 2)
+@ 
+\end{center}
+\vspace*{-1cm}
+\caption{Introductory example based on simulated data.}
+\label{fig: simul}
+\end{figure}
+
+In Sections~\ref{sec: computation} and \ref{sec: characterization} we briefly review some theory behind log-concave density estimation. The use of the smoothed log-concave density estimator introduced in \cite{duembgen_09} is illustrated in Section~\ref{sec: smoothed}. After explaining the implementation of the main functions of the package \pkg{logcondens} in Section~\ref{sec: implement}, sampling from both estimators is discussed briefly in Section~\ref{sec: sampling}. In Section~\ref{sec: illustration simulation} we take up the simulated data from the introduction and use it to illustrate the package's main functions. How to apply log-concave densities for the analysis of a real world dataset is shown in Section~\ref{sec: analysis reliability}. We conclude in Section~\ref{sec: 2sample} with a small simulation study illustrating the use of log-concave estimates to improve the power of a two-sample Kolmogorov-Smirnov test.
+
+Explicit formulae for the distribution, integrated distribution, quantile function, the smoothed estimator as well as for the computation of the difference between two log-concave CDFs are postponed to the appendix.
+
+
+% -----------------------------------------------------
+\section{Computing the log-concave estimator}
+\label{sec: computation}
+% -----------------------------------------------------
+
+
+\paragraph{The general log-likelihood.}
+%
+As discussed in the introduction, our goal is to maximize the functional $\ell(\varphi)$ over all 
+log-concave functions $\varphi: \R \to [-\infty, \infty)$ such that $\exp(\varphi)$ is a probability density. Let us first modify $\ell$ somewhat: For given support points $x_1 < x_2 < \cdots < x_m$ and probability weights $w_1, w_2, \ldots, w_m > 0$ we consider
+$$
+    \ell(\varphi) \ = \ \sum_{j=1}^m w_j \varphi(x_j) .
+$$
+
+\textbf{The standard setting.} \
+%
+By default, $x_1 < x_2 < \ldots < x_m$ are the different elements of $\{X_1,X_2,\ldots,X_n\}$, and
+$w_j := n^{-1}\#\{i \le n : X_i = x_j\}$. In the idealized setting of i.i.d.\ observations $X_i$ from a density $f$, the numbers $m$ and $n$ coincide, while $x_j = X_{(j)}$ and $w_j = n^{-1}$. However, there could be tied observations, e.g.\ due to rounding errors, resulting in $m < n$ support points.
+
+
+\textbf{An alternative setting.} \
+%
+In case of very large sample sizes one may wish to reduce computation time and storage space by approximating the raw data $X_i$. Let $x_1 < x_2 < \cdots < x_m$ be given support points such that $[x_1,x_m] \supset [X_{(1)},X_{(n)}]$. Then we define probability weights $w_j$, $1 \le j \le m$, as follows: If a raw observation $X_i$ falls into $[x_j,x_{j+1}]$, we add $n^{-1} (x_{j+1}-X_i)/(x_{j+1}-x_j)$ to $w_j$ and $n^{-1} (X_i-x_j)/(x_{j+1}-x_j)$ to $w_{j+1}$. That way we approximate the empirical distribution of the raw data $X_i$ by a discrete distribution $\sum_{j=1}^m w_j \delta_{x_j}$ having the same mean and possibly larger variance. However one can show that the increase in variance is no larger than $\max_{j < m} (x_{j+1}-x_j)^2/4$. Finally, pairs $(x_j,w_j)$ with $w_j = 0$ are removed to reduce the dimension as much as possible.
+
+We implemented automatic computation of weights and the binning algorithm described above in the function \code{preProcess}
+in \pkg{logcondens}. This function is automatically invoked by those functions that take the raw data as argument, specifically
+\code{activeSetLogCon}, \code{icmaLogCon} and the functions that depend on them, most importantly \code{logConDens}.
+For a description of how to specify a user-defined grid we refer to the respective help files in \code{logcondens}.
+
+\paragraph{The modified log-likelihood.}
+%
+To relax the constraint of $f$ being a density and to get a criterion function to maximize over \textit{all} concave functions, we employ the standard trick (cf. \citealp[Theorem 3.1]{silverman_82}) of adding a Lagrange term to $\ell$, leading to the modified functional
+\begin{equation}
+    L(\varphi) \ = \ \sum_{j=1}^m w_j \varphi(x_j) - \int_\R \exp \varphi(t) \d t.
+    \label{eq: L2}
+\end{equation}
+With the same arguments as \cite{duembgen_09} one can show that there exists a unique concave function $\lest$ maximizing this functional $L(\cdot)$. It satisfies the equation $\int \exp \lest(t) \d t = 1$ and has the following additional properties: $\lest = -\infty$ on $\R \setminus [x_1,x_m]$, and $\lest$ is continuous and piecewise linear on $[x_1,x_m]$ with knots only in $\{x_1,x_2,\ldots,x_m\}$. Any such function $\varphi$ is fully specified by the vector $\ve{\varphi} = (\varphi(x_j))_{j=1}^m$. We therefore restrict attention to the set $\PP(x_1,x_2,\ldots,x_m)$ of vectors ${\ve{\varphi}} \in \R^m$ such that
+$$
+    \frac{\varphi_{j+1} - \varphi_j}{x_{j+1} - x_j}
+    \ \ge \ \frac{\varphi_j - \varphi_{j-1}}{x_j - x_{j-1}}
+    \quad\text{for} \ i = 2, \ldots, m-1 .
+$$
+This allows to rewrite the integral \eqref{eq: L2} as
+$$
+    L(\varphi)
+    \ = \ \sum_{j=1}^m w_j \varphi_j - \sum_{j=1}^{m-1} (x_{j+1}-x_j) J(\varphi_j, \varphi_{j+1})     
+$$
+with the auxiliary function
+$$
+    J(r,s) \ = \ \begin{cases}
+        \bigl( \exp(r) - \exp(s) \bigr) \big/ (r - s) & \text{if} \ r \ne s , \\
+        \exp(r)                                       & \text{if} \ r = s .
+    \end{cases}
+$$
+The {\it constrained optimization} problem we are now aiming to solve reads
+$$
+    \lest \ = \ \argmax_{\varphi \in \PP(x_1,x_2,\ldots,x_m)} L(\varphi) ,
+$$
+where $L$ is a {strictly concave} functional on $\R^m$, see \citet[Section 2]{duembgen_07}. For more details on the computations leading to the final form of $L$ we refer to \cite{duembgen_09}. It is important to note that (iterative) maximization of the functional $L$ yields the vector $(\lest(x_j))_{j=1}^m$ and not the density estimate directly. However, due to the piecewise linearity
+of the function $\lest$ the maximizing vector $(\lest(x_j))_{j=1}^m$ can be identified with 
+$$
+    \lest(x) \ = \ \begin{cases}
+        \lest_j + (x - x_j) \widehat{s}_{j+1} & \text{for} \ x \in [x_j,x_{j+1}], 1 \le j < m \\
+        - \infty                              & \text{for} \ x \in \R \setminus [x_1,x_m]
+    \end{cases}
+$$
+for $x \in \R$, where $\widehat{s}_{j+1} = \Del \lest_{j+1} / \Del x_{j+1}$ and $\Del v_{j+1} := v_{j+1} - v_j$, $1 \le j < m$, for any vector $\ve{v} \in \R^m$. Finally, the density estimate at $x$ is then simply $\est = \exp \lest$, i.e.\ $\est = 0$ outside $[x_1,x_m]$. These two functions are implemented in \code{evaluateLogConDens}. Computation of additional functions at a given point $x$ is discussed in Section~\ref{sec: evaluation}.
+
+
+\paragraph{Approximation.}
+%
+From the definitions of $L(\varphi)$ and $J(r,s)$ above it is clear that numerical inaccuracies may occur 
+whenever two consecutive components $\varphi_j, \varphi_{j+1}$ of the vector $\ve{\varphi}$ under consideration 
+are getting very close. This means that the argument $\ve{\varphi}$ has ``flat'' stretches. To avoid these 
+numerical inaccuracies in computations, we approximate $J$ and its derivatives in the implementation 
+in \pkg{logcondens} by
+Taylor polynomials of degree four if $|r-s|$ is small. Exact bounds and formulae for these polynomials are 
+worked out in \citet[Section 6]{duembgen_07}.
+Similar approximations are also used to compute $\int \hat F$ and $\hat F^*$, see the appendix.
+
+
+\paragraph{An iterative convex minorant algorithm.}
+%
+First attempts to compute $\lest$ are described in \cite{rufibach_07}: Four different algorithms were proposed that all reliably found the maximum of $L$. However, not all are equally efficient. As a clear winner in the contest arranged in that paper in terms of speed came off the ICMA. For this reason, this algorithm was chosen to be implemented in \pkg{logcondens}, as the function \code{icmaLogCon}. First proposed by \cite{groeneboom_92} and further detailed by \cite{jongbloed_98}, the ICMA is especially tailored to maximize a smooth objective function over particular convex cones by maximizing quadratic approximations to the objective function via the pool-adjacent-violaters algorithm (PAVA).
+
+
+\paragraph{An active set algorithm.}
+%
+For a description of active set algorithms see e.g.\ \citet[Section 10.3]{fletcher_87} or \citet[Section 16.4]{nocedal_99}. The application to log-concave density estimation is discussed in considerable generality by \citet[Section 3]{duembgen_07} and therefore omitted here. A key feature of an ASA is that it solves a {\it finite} number of {\it unconstrained} optimization problems. The function \code{activeSetLogCon} estimates a log-concave density via an ASA.
+
+\paragraph{Related work.}
+%
+Note also the implementations of the above two algorithms for {\it isotonic} estimation in the \proglang{R} package \pkg{isotone} and the description in \cite{deleeuw_09}. In a similar context, an ASA was used to compute an estimate in the ordered factor regression problem, see \cite{rufibach_10} and the \proglang{R} package \pkg{OrdFacReg} \citep{OrdFacReg}.
+
+
+\paragraph{Range of applicability.}
+%
+The minimal sample size that allows estimation of a log-concave density is $n = 2$. Estimating a log-concave density for $n$ in the millions causes no problems on a laptop computer and depending on the resources may take a few minutes. Alternatively, to speed up computation time for large $n$, one can approximate the empirical distribution of the raw data by a discrete distribution with $m << n$ support points as indicated before.
+
+
+% --------------------------------------------------------
+\section{Characterization and properties of the estimator}
+\label{sec: characterization}
+% --------------------------------------------------------
+
+In what follows let $\dest$ be the distribution function corresponding to the density $\est = \exp \lest$, and let $\ED$ be the distribution function of the discrete measure $\sum_{j=1}^m w_j \delta_{x_j}$. Using suitable directional derivatives of the log-likelihood function, \cite{duembgen_09} derive various useful facts about $\lest$. Here are the two most relevant ones in the present context:
+
+\paragraph{A characterization.}
+%
+Let $\tilde{\varphi}$ be a concave function which is linear on all intervals $[x_j, x_{j+1}]$, $1 \le j < m$, while $\tilde{\varphi} = - \infty$ on $\R \setminus [x_1,x_m]$. Defining $\tilde{F}(x) := \int_{-\infty}^{x} \exp{\tilde{\varphi}(r)} \d r$, we assume further that $\tilde{F}(x_m) = 1$. Then $\tilde{\varphi} = \lest$ and $\tilde{F} = \dest$ if, and only if,
+for arbitrary $t \in [x_1,x_m]$,
+\bea 
+    \int_{x_1}^t \tilde{F}(r) \d r \ \le \ \int_{x_1}^t \ED(r) \d r
+\eea
+with equality in case of $t$ being a knot of $\tilde{\varphi}$, i.e.\
+$$
+    t \ \in \ \SS(\tilde{\varphi})
+        := \{x_1,x_m\} \cup \bigl\{ t \in (x_1,x_m) :
+            \tilde{\varphi}'(t \, - ) > \tilde{\varphi}'(t \, +) \bigr\} .
+$$
+This characterization entails that $\dest$ is rather close to $\ED$ in the sense that
+$\ED(t \, -) \le \dest(t) \le \ED(t)$ for any knot $t$ of $\lest$. It is also relevant for our algorithms, because
+\begin{equation}
+\label{eq: H(t)}
+    H(t,\tilde{\varphi}) := \int_{x_1}^t (\tilde{F} - \ED)(r) \d r
+    \ = \ \frac{d}{du} \Big|_{u=0} L(\tilde{\varphi} + u \Delta_t)
+\end{equation}
+with $\Delta_t(x) := \min(x - t, 0)$. Suitable functions to compute $H = H(\cdot,\lest)$ are implemented in \pkg{logcondens}, see Section~\ref{sec: implement}.
+
+\paragraph{Further properties.}
+%
+Another remarkable property of $\dest$ and $\ED$ is the inequality
+$$
+    \int h(x) \d \dest(x)
+    \ \le \ \int h(x) \d \ED(x)
+    \quad\text{for arbitrary convex} \ h : \R \to \R .
+$$
+In particular, setting $h(x) = \pm x$ and $h(x) = x^2$ yields
+\begin{equation}
+\label{eq: Mean Fhat}
+    \mathrm{Mean}(\dest)
+    \ = \ \mathrm{Mean}(\ED)
+    \ = \ \sum_{j=1}^m w_j x_j = \bar{X}
+\end{equation}
+and
+\begin{equation}
+\label{eq: Var Fhat}
+    \Var(\dest)
+    \ \le \ \Var(\ED) .
+\end{equation}
+
+
+% -----------------------------------------------------
+\section{Smoothing the log-concave density estimator}
+\label{sec: smoothed}
+% -----------------------------------------------------
+
+From \citet[Theorem 2.1]{duembgen_09} we know that $\lest$ is equal to 0 outside $[x_1, x_m]$, i.e. $\lest$ has potentially sharp discontinuities at both ends of its support. In addition, the estimator $\lest$ may have quite sharp kinks; compare the mode of $\est$ in Figure~\ref{fig: simul}. To overcome these minor inconveniences and for additional reasons elaborated in the analysis of the reliability data in Section~\ref{sec: analysis reliability}, \cite{duembgen_09} introduce a {\it smoothed log-concave density estimator} $\est^*$, defined for some bandwidth $\gamma > 0$ as
+$$
+    \est^*(x) \ = \ \int_{-\infty}^\infty \phi_\gamma (x-y) \est(y) \d y ,
+$$
+i.e.\ the convolution of $\est$ with a Gaussian kernel $\phi_\gamma$ with mean 0 and standard deviation $\gamma$. By virtue of a celebrated result of \cite{prekopa_71}, it is known that the class of log-concave densities is closed under convolution, whence $\est^*$ is log-concave, too. Due to the simple structure of $\lest$ and our restriction to Gaussian kernels, one can deduce explicit formulae for $\est^*(x)$ and its distribution function $\dest^*(x)$ at any $x$, see Section~\ref{sec: evaluation} and Appendix~\ref{sec: formula smoothed}.
+
+
+\paragraph{Choice of bandwidth.}
+%
+Let $\dest^*$ be the distribution function of the smoothed density $\est^*$. Note that $\dest^*$ is the distribution function of $X + Z$ with independent random variables $X \sim \dest$ and $Z \sim N(0,\gamma^2)$. Thus it follows from \eqref{eq: Mean Fhat} that all distribution functions $\dest^*, \dest, \ED$ have the same mean $\bar{X}$, whereas
+$$
+    \Var(\dest^*)
+    \ = \ \Var(\dest) + \gamma^2
+    \ \le \ \Var(\ED) + \gamma^2 ,
+$$
+according to \eqref{eq: Var Fhat}. Now consider the estimator
+$$
+    \widehat{\sigma}^2
+    \ = \ n (n-1)^{-1} \Var(\ED)
+    \ = \ n (n-1)^{-1} \sum_{j=1}^m w_j \bigl( x_j - \bar{X} \bigr)^2 .
+$$
+In the standard setting, this is an unbiased estimator of $\Var(X_i)$. Hence, as proposed by \citet[Section 3]{duembgen_09}, the default value for $\gamma$ is the square root of
+\bea
+    \widehat{\gamma}^2 &=& \widehat{\sigma}^2 - \Var(\dest) .  \label{eq: vars}
+\eea
+This yields an estimated distribution function $\dest^*$ with standard deviation $\widehat{\sigma}$. Using $\gamma = \widehat{\gamma}$ also makes $\est^*$ a {\it fully automatic} estimator. 
+
+The variance of $\dest$ can be computed explicitly as follows:
+\bea
+    \Var(\dest)
+    & = & \int_{x_1}^{x_m} (x - \bar{X})^2 \est(x) \d x
+    \nonumber \\
+    & = & \sum_{j=2}^m \Delta x_j
+        \Bigl( (x_{j-1} - \bar{X})^2 J_{10}(\lest_{j-1},\lest_j)
+            + (x_j - \bar{X})^2 J_{10}(\lest_j,\lest_{j-1})
+    \label{eq: var} \\
+    && \qquad\qquad\qquad - \ (\Delta x_j)^2 J_{11}(\lest_{j-1},\lest_j) \Bigr) .
+    \nonumber
+\eea
+Here $J_{10}$ equals the partial derivative of $J(r,s)$ with respect to $r$, while $J_{11}$ is the partial derivative of $J$ with respect to $r$ and $s$, see \citet[Section 2]{duembgen_07} for a derivation and computational details.
+
+
+
+% -----------------------------------------------------
+\section{Implementation and main functions}
+\label{sec: implement}
+% -----------------------------------------------------
+
+% -----------------------------------------------------
+\subsection{Function to compute the estimate}
+% -----------------------------------------------------
+
+Using the simulated data from the introduction we now describe the function to estimate a log-concave density and the corresponding \code{summary} and \code{plot} methods.
+
+The primary function of the package is \code{logConDens} which returns an object of class \code{dlc}. A \code{dlc} object is a list consisting of
+%
+\bi
+\item \code{xn}: the vector $(X_i)_{i=1}^n$ of original observations,
+\item \code{x}: the vector $(x_j)_{j=1}^m$ of support points,
+\item \code{w}: the vector $(w_j)_{j=1}^m$ of weights,
+\item \code{phi}: the estimated vector $\lest = (\lest(x_j))_{j=1}^m$,
+\item \code{IsKnot}: the vector $(1\{x_j \ \text{is a knot of} \ \lest\})_{j=1}^m$,
+\item \code{L}: the value $L(\lest)$,
+\item \code{Fhat}: a vector $(\dest(x_j))_{j=1}^m$ with values of the c.d.f.\ of $\est$,
+\item \code{H}: a vector $(H(x_j))_{j=1}^m$ of directional derivatives
+    (cf.\ \eqref{eq: H(t)} in Section~\ref{sec: characterization}),
+\ei
+%
+as generated by \code{activeSetLogCon}. If \code{smoothed = TRUE} in the call of \code{logConDens} then \code{dlc} additionally contains the entries
+%
+\bi
+\item \code{f.smoothed}: A vector that contains the values of $\est^*$
+either at an equidistant grid of 500 values ranging from $\underline{\ve{x}} - 0.1r$ to $\overline{\ve{x}} + 0.1r$ for
+$\underline{\ve{x}} = \min_{j=1, \ldots, m} x_j, \overline{\ve{x}} = \max_{j=1, \ldots, m} x_j,$
+and $r = \overline{\ve{x}} - \underline{\ve{x}}$ if \code{xs = NULL} or the value of $\est^*$
+at the values of \code{xs} if a vector is provided as the latter argument.
+\item \code{F.smoothed}: The values of $\hat F_n^*$ on the grid.
+\item \code{gam}: The computed value of $\hat \gamma$.
+\item \code{xs}: Either the vector of 500 grid points or the initial vector \code{xs} of points at which \code{f.smoothed} is to be computed.
+\ei
+%
+%The latter three quantities are a result of a call to \code{logconSmoothed}. 
+Finally, the entry \code{smoothed} returns the value of the initial argument. Note that the knots collected in \code{IsKnot} are not derived from $\lest$ but appear as a direct by-product of the active set algorithm. The quantities $H_j$ can be used to verify the characterization of the estimator in terms of distribution function as elaborated in \cite{duembgen_09}. See Section~\ref{sec: characterization}
+for an illustration.
+
+A \code{summary} and \code{plot} method are available for the class \code{dlc}.
+The \code{summary} method provides some basic quantities of the estimates whereas the \code{plot} method is intended to provide a quick way of standard plotting $\lest$, $\est$, and $\dest$ and $\hat f^*$, $\hat F^*$ (optional).
+For more tailor-made plots we recommend to extract the necessary quantities from the \code{dlc} object and plot them with the desired modifications, as we do when generating Figure~\ref{fig: relplot}.
+
+Note that to plot $\est$ and $\dest$ we do not simply linearly interpolate the points
+$\exp \lest(t)$ for $t \in \hat \SS_m(\lest)$ but we rather compute $\est$ and $\dest$
+on a sufficiently fine grid of points using the function \code{evaluateLogConDens}, to display the shape of the estimated density and distribution function between knot points correctly.
+
+
+% -----------------------------------------------------
+\subsection{Evaluation of the fitted estimators}
+\label{sec: evaluation}
+% -----------------------------------------------------
+
+Thanks to the simple structure of $\lest$, closed formulae can be derived for $\lest, \est, \dest, \dest^{-1}$ as well 
+as $\est^*, \dest^*$ on their respective domain, see Section~\ref{sec: computation} and the appendix for details. These formulae are implemented in 
+\pkg{logcondens} via the two functions \code{evaluateLogConDens} and \code{quantilesLogConDens}. 
+%All these functions can directly be applied to a \code{dlc} object.
+
+To compute the process $H = H(\cdot,\lest)$ in \eqref{eq: H(t)} one needs to be able to compute the integral of the distribution functions $\dest$ and $\ED$, at an arbitrary point $t$. Again, exploiting the structure of $\lest$ a closed formula can be derived for $\int_{x_1}^{t} \dest(r) \d r$, see Appendix~\ref{sec: intF}. This formula is implemented in the function \code{intF} in the package \pkg{logcondens}, and we use this function 
+together with its companion \code{intECDF} (ECDF: empirical cumulative distribution function) for the empirical distribution function to compute the process $D$. 
+
+
+% -----------------------------------------------------
+\section{Sampling from the different estimators}
+\label{sec: sampling}
+% -----------------------------------------------------
+
+\cite{cule_08} describe Monte Carlo estimation of functionals of $\est$ (which may be one- or multidimensional) by sampling from a random vector (variable) $\ve{\hat X}$ that has density $\est$ and plugging in these samples into the functionals of interest. In order to sample from $\est$, they use a rejection sampling procedure, see \citet[Section 7.1]{cule_08}, implemented as the function \code{rlcd} in \cite{cule_09}.
+In \pkg{logcondens} we implemented sampling not only from $\est$, but also from $\est^*$ as the function \code{rlogcon}, using the quantile function $\dest^{-1}$ implemented in \code{quantilesLogConDens}. Note that by making use of the quantile function $\dest^{-1}$ in \code{rlogcon} we generate a sample of a given size from $\est$ {\it directly}, without the need of rejecting (some of) the generated numbers. 
+There is no need to implement the quantile function $\dest^*$ for the sake of simulating samples from $\dest^*$, thanks to the fact that $\est^*$ is the density of the convolution of $\est$ with a given normal kernel.
+
+Sampling from the estimate may serve at least two purposes: First, as described above, generated samples can be used to approximate functionals of $\est$ or $\est^*$, as described in \cite{cule_08}. Second, in certain applications it may be the explicit goal to get simulated samples from an estimated density, see Section~\ref{sec: analysis reliability} below and \citet[Section 3]{duembgen_09}.
+
+
+% -----------------------------------------------------
+\section{Illustration of main functions on simulated example}
+\label{sec: illustration simulation}
+% -----------------------------------------------------
+
+To demonstrate the code in \pkg{logcondens} we take up the sample generated in Section~\ref{sec: intro LC} (denoted as the object \code{x.sim}). Note that the \code{plot} method for a \code{dlc} object is already illustrated in that introductory example. Here, we detail application of the functions discussed in Section~\ref{sec: implement}. To get a summary of the estimated densities invoke
+
+<<label = dispSummary1, results = verbatim, echo = TRUE, eval = TRUE>>=
+res <- logConDens(x.sim, smoothed = TRUE, print = FALSE)
+summary(res)
+@ 
+
+Compare the displayed numbers, such as mode, value at the mode, and knots of the log-density to Figure~\ref{fig: simul}.
+To compute the value of all the estimated functions we invoke:
+
+<<label = dispSummary2, results = verbatim, echo = TRUE, eval = TRUE>>=
+evaluateLogConDens(xs = -1, res, which = 1:5)
+quantilesLogConDens(ps = 0.5, res)
+@ 
+
+
+To illustrate the characterization of the estimators provided in Section~\ref{sec: characterization}, we use the functions \code{intF} and \code{intECDF} to compute the process $H(t)$, see Figure~\ref{fig: simul CDF}. The upper plot in Figure~\ref{fig: simul CDF} displays $\ED$ and $\dest$ whereas in the lower plot $H$ is provided. The graphs illustrate that (1) $\dest$ closely approximates $\ED$, a fact that can be made precise, see \citet[Corollary 2.5 and Theorem 4.4]{duembgen_09}, (2) the kinks of $\lest$ occur where the process $H$ is equal to zero as postulated in Section~\ref{sec: characterization} (compare Figures~\ref{fig: simul} and \ref{fig: simul CDF}).
+
+<<label = H1, results = verbatim, echo = TRUE, eval = FALSE>>=
+n <- res$n
+xn <- res$xn
+ss <- sort(unique(c(x.sim, seq(min(x.sim), max(x.sim), length = 200))))
+H1 <- intF(ss, res)
+H2 <- intECDF(ss, xn)
+Ht <- H1 - H2
+ED <- 0:(n + 1) / n
+
+par(mfrow = c(2, 1), mar = c(0, 5, 2, 1), mex = 1, las = 1)
+plot(x.sim, res$Fhat, type = "n", xaxt = "n", ylab = "Distribution
+    functions")
+rug(x.sim)
+lines(x.sim, res$Fhat, col = 2, lwd = 1.5)
+lines(c(min(xn) - 10, xn, max(xn) + 10), ED, type = "s", lwd = 1.5)
+abline(v = res$knots, lty = 3)
+par(mar = c(4.5, 5, 0, 1))
+legend(-2.1, 1, c("empirical distribution function", expression("CDF based
+    on " * hat(f)[m])), lty = 1, col = 1:2, lwd = 2, bty = "n")
+
+plot(ss, Ht,
+  type = "n", xlab = "generated random sample x",
+  ylab = "process H(t)", yaxt = "n"
+)
+lines(ss, Ht, col = 2, lwd = 1.5)
+ax <- -c(0.02, 0.01, 0)
+axis(2, at = ax, labels = ax, cex.axis = 0.8)
+rug(x.sim)
+abline(v = res$knots, lty = 3)
+abline(h = 0, lty = 1)
+@
+
+\begin{figure}[t!]
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+<<label = plot2, eval = TRUE, fig = TRUE, echo = FALSE, width = 8, height = 8>>=
+n <- res$n
+xn <- res$xn
+ss <- sort(unique(c(x.sim, seq(min(x.sim), max(x.sim), length = 200))))
+H1 <- intF(ss, res)
+H2 <- intECDF(ss, xn)
+Ht <- H1 - H2
+ED <- 0:(n + 1) / n
+
+par(mfrow = c(2, 1), mar = c(0, 5, 2, 1), mex = 1, las = 1)
+plot(x.sim, res$Fhat, type = "n", xaxt = "n", ylab = "Distribution functions")
+rug(x.sim)
+lines(x.sim, res$Fhat, col = 2, lwd = 1.5)
+lines(c(min(xn) - 10, xn, max(xn) + 10), ED, type = "s", lwd = 1.5)
+abline(v = res$knots, lty = 3)
+par(mar = c(4.5, 5, 0, 1))
+legend(-2.1, 1, c("empirical distribution function", expression("CDF based on " * hat(f)[m])), lty = 1, col = 1:2, lwd = 2, bty = "n")
+
+plot(ss, Ht, type = "n", xlab = "t", ylab = "process H(t)", yaxt = "n")
+lines(ss, Ht, col = 2, lwd = 1.5)
+ax <- -c(0.02, 0.01, 0)
+axis(2, at = ax, labels = ax, cex.axis = 0.8)
+rug(x.sim)
+abline(v = res$knots, lty = 3)
+abline(h = 0, lty = 1)
+@
+\end{center}
+\vspace*{-1cm}
+\caption{Distribution functions and the process $H(t)$ for the simulated data.
+Vertical bars at the bottom of the plots indicate observations. 
+\label{fig: simul CDF}}
+\end{figure}
+
+
+% -----------------------------------------------------
+\section{Exemplary analysis of reliability dataset}
+\label{sec: analysis reliability}
+% -----------------------------------------------------
+
+To further demonstrate the functions in \pkg{logcondens} we will apply them to analyze a real-life dataset that had previously been used to illustrate log-concave 
+density estimation. The reliability data was collected as part of a consulting project at the Institute for Mathematical Statistics and Actuarial Science at the 
+University of Bern, see also \citet[Section 3]{duembgen_09}. Basic descriptive statistics of the dataset are provided in Table~\ref{tab: descrstat}. Note that in 
+this dataset we have $n = \Sexpr{length(reliability)}$ original observations. However, pooling tied observations and introducing weights as described in 
+Section~\ref{sec: computation} we end up with only $m = \Sexpr{length(unique(reliability))}$ unique observations.
+
+\renewcommand{\baselinestretch}{1.15}
+\begin{center}
+\begin{table}[ht]
+\begin{center}
+{\footnotesize
+\begin{tabular}{lrrrrrrr}
+ \bf{Variable} & $n$ & Minimum & $1^\mathrm{st}$ Quartile & Median & $3^\mathrm{rd}$ Quartile & Maximum & IQR \\
+  \hline
+reliability & \Sexpr{length(reliability)} & \Sexpr{round(min(reliability), 1)} & \Sexpr{round(quantile(reliability)[2], 1)} & \Sexpr{round(quantile(reliability)[3], 1)} & \Sexpr{round(quantile(reliability)[4], 1)} & \Sexpr{round(max(reliability), 1)} & \Sexpr{round(IQR(reliability), 1)} \\
+  \end{tabular}
+}
+\caption{Descriptive statistics of reliability data.}
+\label{tab: descrstat}
+\end{center}
+\end{table}\end{center}
+\renewcommand{\baselinestretch}{1}
+
+
+A company asked for Monte Carlo experiments to predict the reliability
+of a certain device they produce, where the reliability depended in a certain deterministic way on
+five different and independent random input parameters. The dataset \code{reliability}  in \pkg{logcondens}
+contains only data on the first of these input parameters. The goal was to fit a suitable distribution to this sample that can be used
+to simulate from. As elaborated in \citet[Section 3]{duembgen_09} we first considered 
+two standard approaches to estimate the unknown density $f$: namely
+%
+\begin{enumerate}
+\item[(i)] fitting a Gaussian density $\est_{\rm par}$ with mean $\mu(\ED)$ and variance 
+$\widehat{\sigma}^2 = n(n - 1)^{-1} \Var(\ED)$,
+\item[(ii)] the kernel density estimator
+\bea
+    \est_{\rm ker}(x) \ := \ \int \phi_{\widehat{\sigma}/\sqrt{n}}^{}(x - y) \d \ED(y) ,
+\eea
+where $\phi_\sigma$ denotes the Normal density with mean 0 and variance $\sigma^2$. 
+\end{enumerate}
+%
+The very small bandwidth $\hat{\sigma}/\sqrt{n}$ was chosen to obtain a density with variance $\hat{\sigma}^2$ and to
+avoid putting too much weight into the tails, which was crucial in the engineers' application. We think that in general
+such undersmoothed density estimators are a simple way of depicting the empirical distribution of raw data.
+
+Looking at the data, approach (i) is clearly inappropriate because the reliability sample of size $n = \Sexpr{length(reliability)}$ reveals a skewed and pronouncedly non-gaussian distribution. This can be seen in Figure~\ref{fig: relplot}, where the multimodal curve corresponds to $\hat{f}_{\rm ker}$, while the dashed line depicts $\hat{f}_{\rm par}$. Approach~(ii) yielded Monte Carlo results agreeing well with measured reliabilities, but the engineers were not satisfied with the multimodality of $\hat{f}_{\rm ker}$. Choosing a kernel estimator with larger bandwidth would overestimate the variance and put too much weight into the tails. Thus we agreed on a third approach and estimated $f$ by the smoothed log-concave estimator $\est^*$ introduced in Section~\ref{sec: smoothed}.
+
+This density estimator is the skewed {\it unimodal} curve in Figure~\ref{fig: relplot}. Apart from the advantages described above -- unimodality, variance equal to $\widehat{\sigma}^2$, and not too heavy tails -- it yielded convincing results in the Monte Carlo simulations, too. In addition and as expected, the kinks and the discontinuities at $x_1$ and $x_m$ of $\est$ are smoothed out by $\est^*$. Note that both estimators $\est$ and $\est^*$ are fully automatic.
+
+Now, the primary goal of this data analysis was to provide simulated samples from the estimated densities $\est$ and $\est^*$. 
+% A way for easy sampling from the distributions corresponding to the estimated
+% densities is described in \cite{duembgen_09}. 
+The function \pkg{rlogcon} that implements sampling from the distribution that corresponds to $\est$ in the package \pkg{logcondens} is based on the quantile function $\dest^{-1}$, derived in Appendix~\ref{sec: dest} and implemented as \code{quantilesLogConDens}. Thanks to the fact that $\est^*$ is the density of the convolution of $\est$ with a Gaussian kernel with standard deviation $\gamma$, a random number $X^*$ from $\est^*$ can easily be obtained by computing $X^* = X + Y$ with independent random variables $X \sim \dest$ and $Y \sim N(0,\gamma^2)$.
+
+To illustrate how the functions in \pkg{logcondens} can be used to explore different estimates, we provide 
+below the code that is used to generate Figure~\ref{fig: relplot}. Note that this is the same Figure 
+already displayed in \citet[Figure 2]{duembgen_09}.
+
+<<label = disp_rel1, results = verbatim, echo = TRUE, eval = FALSE>>=
+x.rel <- sort(reliability)
+n <- length(x.rel)
+mu <- mean(x.rel)
+sig <- sd(x.rel)
+xs <- seq(1350, 1950, length.out = 500)
+res <- logConDens(x.rel, smoothed = TRUE, print = FALSE, xs = xs)
+f.smoothed <- res$f.smoothed
+xs2 <- xs[(xs >= min(x.rel)) & (xs <= max(x.rel))]
+f <- rep(NA, length(xs2))
+for (i in 1:length(xs2)) {
+  f[i] <- evaluateLogConDens(
+    xs2[i],
+    res
+  )[, "density"]
+}
+h <- sig / sqrt(n)
+f.kernel <- rep(NA, length(xs))
+for (i in 1:length(xs)) {
+  f.kernel[i] <- mean(dnorm(xs[i],
+    mean =
+      x.rel, sd = h
+  ))
+}
+f.normal <- dnorm(xs, mean = mu, sd = sig)
+par(las = 1, mar = c(3, 3.5, 0.5, 0.5))
+plot(0, 0,
+  type = "n", xlim = c(1390, 1900), ylim =
+    c(0, 6.5 * 10^-3), ylab = ""
+)
+rug(x.rel)
+lines(xs, f.normal, col = 3)
+lines(xs, f.kernel, col = 4)
+lines(xs, f.smoothed, lwd = 4, col = 5)
+lines(xs2, f, col = 2)
+segments(c(-1300, max(x.rel)), c(0, 0), c(min(x.rel), 2000),
+  c(0, 0),
+  col = 2
+)
+legend("topleft", c(
+  expression("log-concave " * hat(f)[n]),
+  expression("normal " * hat(f)[nor]), expression("kernel " * hat(f)[ker]),
+  expression("log-concave smoothed " * hat(f)[n] * "*")
+),
+lty = 1, lwd = 3, col = 2:5, bty = "n"
+)
+segments(res$knots, 0, res$knots, 0.002, lty = 2)
+@
+
+\begin{figure}[t!]
+\begin{center}
+\setkeys{Gin}{width=\textwidth}
+<<label = plot1, eval = TRUE, fig = TRUE, echo = FALSE, width = 8, height = 5>>=
+x.rel <- sort(reliability)
+n <- length(x.rel)
+mu <- mean(x.rel)
+sig <- sd(x.rel)
+xs <- seq(1350, 1950, length.out = 500)
+res <- logConDens(x.rel, smoothed = TRUE, print = FALSE, xs = xs)
+f.smoothed <- res$f.smoothed
+xs2 <- xs[(xs >= min(x.rel)) & (xs <= max(x.rel))]
+f <- rep(NA, length(xs2))
+for (i in 1:length(xs2)) {
+  f[i] <- evaluateLogConDens(xs2[i], res)[, "density"]
+}
+h <- sig / sqrt(n)
+f.kernel <- rep(NA, length(xs))
+for (i in 1:length(xs)) {
+  f.kernel[i] <- mean(dnorm(xs[i], mean = x.rel, sd = h))
+}
+f.normal <- dnorm(xs, mean = mu, sd = sig)
+par(las = 1, mar = c(3, 3.5, 0.5, 0.5))
+plot(0, 0, type = "n", xlim = c(1390, 1900), ylim = c(0, 6.5 * 10^-3), ylab = "")
+rug(x.rel)
+lines(xs, f.normal, col = 3)
+lines(xs, f.kernel, col = 4)
+lines(xs, f.smoothed, lwd = 4, col = 5)
+lines(xs2, f, col = 2)
+segments(c(-1300, max(x.rel)), c(0, 0), c(min(x.rel), 2000), c(0, 0), col = 2)
+legend("topleft", c(
+  expression("log-concave " * hat(f)[n]),
+  expression("normal " * hat(f)[nor]), expression("kernel " * hat(f)[ker]),
+  expression("log-concave smoothed " * hat(f)[n] * "*")
+),
+lty = 1, lwd = 3, col = 2:5, bty = "n"
+)
+segments(res$knots, 0, res$knots, 0.002, lty = 2)
+@
+\end{center}
+\vspace*{-1cm}
+\caption{Different estimates of the density of the reliability data.\label{fig: relplot}}
+\end{figure}
+
+Finally, we illustrate how we can efficiently generate samples from $\est$ and $\est^*$ and thus content the engineers that initiated this research. In addition, 
+samples from the estimators could be used to approximate some functional of $\est$ or $\est^*$, as described in \cite{cule_08}.
+
+<<label = setdig, echo = FALSE>>=
+options(digits = 7)
+Msimul <- 1000
+@ 
+
+<<label = simulrel1, results = verbatim, echo = TRUE, eval = TRUE>>=
+set.seed(1977)
+rel_samples <- rlogcon(n = 20, x0 = x.rel)
+@ 
+
+The sorted sample of size $n = 20$ from the log-concave density estimator can be extracted using
+
+<<label = simulrel2, results = verbatim, echo = TRUE, eval = TRUE>>=
+sort(rel_samples$X)
+@
+
+and one from the smoothed log-concave density estimator via
+
+<<label = simulrel3, results = verbatim, echo = TRUE, eval = TRUE>>=
+sort(rel_samples$X_star)
+@
+
+<<label = setdig, echo = FALSE>>=
+options(digits = 4)
+@ 
+
+
+
+
+% -----------------------------------------------------
+\section{Smooth two-sample permutation test}
+\label{sec: 2sample}
+% -----------------------------------------------------
+
+\citet[Theorem 4.4]{duembgen_09} have shown that the distribution function estimators $\ED$ and $\dest$ are, under mild assumptions, asymptotically equivalent and $\dest$ acts in this sense as a smoother of $\ED$. However, by imposing log-concavity efficiency gains in estimation seem plausible for small to moderate sample sizes. This leads us to the proposal of a {\it smooth test for distribution functions} which we now describe.
+
+Suppose the researcher is given two samples $(X_i)_{i=1}^{n_1}$ and $(Y_i)_{i=1}^{n_2}$ of independent random variables $X_i \sim F_X$ and $Y_j \sim F_Y$ with unknown distribution functions $F_X, F_Y$.
+
+To test whether $H_0: F_X = F_Y$ versus $H_1: F_X \ne F_Y$, a commonly used two-sample test statistic is the Kolmogorov-Smirnov statistic, comparing the empirical distribution functions $\ED_X$ and $\ED_Y$ of the two samples:
+$$
+    \mathbb K = \mathbb K(\ED_X, \ED_Y)
+    \ := \ \bigl( n_1 n_2 / (n_1 + n_2)) \bigr)^{1/2} \SupN{\ED_X - \ED_Y}
+$$
+where $\SupN{f}:=\sup_{x \in \R}|f(x)|$ for any function $f: \R \to \R$. The limiting distribution of $\mathbb K_n$ 
+and the corresponding asymptotic test can be found in \cite{durbin_73}.
+
+If one imposes that $F_X$ and $F_Y$ both have log-concave density functions, we propose the following modified test statistic:
+$$
+    \hat K = \hat K(\dest_X,\dest_Y)
+    \ = \ \bigl( n_1 n_2 / (n_1 + n_2)) \bigr)^{1/2} \SupN{\dest_X-\dest_Y}
+$$
+where $\dest_X$ and $\dest_Y$ are the log-concave distribution function estimators of $F_X$ and $F_Y$. Deriving the limiting distribution of this statistic is a difficult task, but if one assumes that under $H_0$ the pooled sample $(Z_1,Z_2,\ldots,Z_{n_1+n_2}) := (X_1,\ldots,X_{n_1},Y_1,\ldots,Y_{n_2})$ has the same distribution as
+$$
+    (Z_{\Pi_1},\ldots,Z_{\Pi_{n_1}},Z_{\Pi_{n_1+1}},\ldots,Z_{\Pi_{n_1+n_2}})
+$$
+where $\Pi$ is a random permutation of $\{1,\ldots,n_1+n_2\}$ not depending on the data one can perform a Monte Carlo permutation test of $H_0$ as follows:
+Generate $M$ independent copies of $\Pi$ and calculate the corresponding values of the
+test statistic $\hat K^{(1)},\hat K^{(2)}, \ldots, \hat K^{(M)}$. Then a nonparametric $p$-value for $H_0$ is given by
+$$
+    \widehat{p} \ = \ \frac{1+\#\{i \le M \,: \, \hat K^{(i)} \ge \hat K\}}{1+M}.
+$$
+The null hypothesis $H_0$ is rejected if $p$ is not larger than the pre-specified significance level $\alpha$.
+
+Details on the computation of $\hat K(\dest_X,\dest_Y)$ as well as for
+$\hat K_n^*(\dest_X,\dest_Y)$, the statistic based on the {\it smoothed} log-concave distribution function estimates, are provided in Appendix~\ref{sec: test comp details}.
+
+
+Computation of differences between distribution functions is implemented in the function \code{maxDiffCDF} in the \pkg{logcondens} package. To 
+generate two samples from a Gamma distribution and invoke the smooth two sample test that is based on the function \code{maxDiffCDF} use the code:
+
+<<label = disp2sample, results = verbatim, echo = TRUE, eval = TRUE>>=
+set.seed(1)
+n1 <- 20
+n2 <- 25
+x <- sort(rgamma(n1, 2, 1))
+y <- sort(rgamma(n2, 2, 1) + 0.5)
+twosample <- logconTwoSample(x, y, M = 5, display = FALSE)
+twosample$p.value
+twosample$test.stat.orig
+twosample$test.stats[1:5, ]
+@ 
+
+So in this example we get $p$-values of $\Sexpr{format.pval(twosample$p.value[1], digits = 2, eps = 10^-3)}$ and $\Sexpr{format.pval(twosample$p.value[2], digits = 2, eps = 10^-3)}$, respectively, quantifying the evidence against the null hypothesis of equal distribution functions. The first of these $p$-values results from a permutation test based on the log-concave MLE whereas the latter is computed via the smoothed log-concave density estimate.
+Note that we have chosen the (too) small number of permutations $M = 5$ only in this illustrative example.
+Clearly, in applications we recommend to set $M$ to at least 1000, as we do in our simulations below.
+
+To assess the performance of this nonparametric permutation test in terms of power compared to the Kolmogorov-Smirnov 
+test we conducted a simulation study considering the following settings:
+
+\begin{center}
+\begin{tabular}{llll}
+  Setting 1: & $n_1 = 20$ & $n_2 = 25$ & $X \sim$ N$(0, 1)$ vs. $Y \sim$ N$(\mu, 1)$        \\
+  Setting 2: & $n_1 = 20$ & $n_2 = 25$ & $X \sim$ Gam(2, 1) vs. $Y \sim$ Gam$(2, 1) + \mu$  \\
+  Setting 3: & $n_1 = 20$ & $n_2 = 25$ & $X \sim$ Gam(2, 1) vs. $Y \sim$ Gam($\tau, 1)$
+\end{tabular}
+\end{center}
+                                                                    
+for $\mu\in \{0, 0.5, 1, 1.5, 2\}$ and $\tau \in \{1, 1.5, 2, 2.5, 3\}$.
+%\marginpar{$M=999$ ist klar, aber warum nicht 1000 Simulationen?} %???
+We simulated each setting \Sexpr{Msimul} times and $M = 999$ was used as argument in \code{logconTwoSample}. 
+The number of rejected null hypothesis when adopting a significance level of $\alpha = 0.05$ are displayed in 
+Figure~\ref{fig: sim1}. We find, in accordance with \citet[Section 9, Remark (ii)]{cule_08}, that the test based on 
+the log-concave CDF uniformly outperforms, for the rather moderate sample sizes we consider, the Kolmogorov-Smirnov 
+test. For very large sample sizes the difference in power between the two tests decreases (not shown). We therefore recommend to use the function \code{logconTwoSample} to assess the null hypothesis of two identical distribution functions, especially when only few or moderately many observations are available.
+
+Note that this modified test is valid even if the assumption of log-concavity of the density functions is violated. Such a violation would only affect the power.
+
+\begin{figure}[t!]
+\begin{center}
+\setkeys{Gin}{width=0.7\textwidth}
+<<label = sim1, eval = TRUE, fig = TRUE, echo = FALSE, width = 5, height = 8.4>>=
+# path <- "C:/rufibach/research/p01_math/p17_logcondens_package/paper/"
+path <- ""
+path.res <- paste(path, "results/", sep = "")
+par(mfrow = c(3, 1), oma = rep(0, 4), mar = c(4.5, 4.5, 2, 1))
+
+## ------------------------------
+## setting 1
+## ------------------------------
+alpha <- 0.05
+mus <- c(0, 0.5, 1, 1.5, 2)
+n1 <- 20
+n2 <- 25
+M0 <- 999
+setting <- 1
+mu1 <- 0
+
+# number of decisicions on H_1 (which is true)
+abs <- matrix(NA, nrow = length(mus), ncol = 10)
+rel <- matrix(NA, nrow = length(mus), ncol = 7)
+for (i in 1:length(mus)) {
+  mu2 <- mus[i]
+
+  name <- paste(path.res, "pvals_setting=", setting, "_n1=", n1, "_n2=", n2, "_mu1=", mu1, "_mu2=", mu2, ".txt", sep = "")
+  p.vals <- read.table(file = name, sep = ",", header = TRUE)
+  abs[i, 1:7] <- c(n1, n2, mu1, mu2, apply(p.vals <= alpha, 2, sum))
+  abs[i, 8:10] <- apply(is.na(p.vals) == FALSE, 2, sum, na.rm = TRUE)
+
+  rel[i, 1:7] <- c(n1, n2, mu1, mu2, apply(p.vals <= alpha, 2, sum) / Msimul)
+}
+
+abs <- as.data.frame(abs)
+dimnames(abs)[[2]] <- c("n1", "n2", "mu1", "mu2", "H1 logcon", "H1 logcon smooth", "H1 K-S", "#tests Logcon", "#tests logcon smooth", "#tests K-S")
+rel <- as.data.frame(rel)
+dimnames(rel)[[2]] <- dimnames(abs)[[2]][1:7]
+absS1 <- abs
+relS1 <- rel
+
+
+plot(0, 0, type = "n", xlim = c(-0.1, 2.1), ylim = c(0, 1), xlab = expression("location difference " * mu), ylab = "proportion of rejected null hypothesis")
+title(expression("Results for Setting 1:  N(0, 1) vs. N(" * mu * ", 1)"))
+move <- 0.015
+points(rel[, 4] - move, rel[, 5], col = 1, pch = 3, lwd = 2) ## logcon test
+points(rel[, 4], rel[, 6], col = 3, pch = 5, lwd = 2) ## logcon smooth test
+points(rel[, 4], rel[, 7], col = 2, pch = 4, lwd = 2) ## K-S test
+abline(h = c(1, alpha, 0), lty = 2)
+legend(-0.1, 0.9, c("based on log-concave CDF", "Kolmogorov-Smirnov"), pch = c(3, 4), col = 1:2, pt.lwd = 2, title = "Type of test:", bty = "n")
+
+
+## ------------------------------
+## setting 2
+## ------------------------------
+alpha <- 0.05
+n1 <- 20
+n2 <- 25
+mus <- c(0, 0.5, 1, 1.5, 2)
+setting <- 2
+mu1 <- 0
+
+# number of decisicions on H_1 (which is true)
+abs <- matrix(NA, nrow = length(mus), ncol = 10)
+rel <- matrix(NA, nrow = length(mus), ncol = 7)
+for (i in 1:length(mus)) {
+  mu2 <- mus[i]
+
+  name <- paste(path.res, "pvals_setting=", setting, "_n1=", n1, "_n2=", n2, "_mu1=", mu1, "_mu2=", mu2, ".txt", sep = "")
+  p.vals <- read.table(file = name, sep = ",", header = TRUE)
+  abs[i, 1:7] <- c(n1, n2, mu1, mu2, apply(p.vals <= alpha, 2, sum))
+  abs[i, 8:10] <- apply(is.na(p.vals) == FALSE, 2, sum, na.rm = TRUE)
+
+  rel[i, 1:7] <- c(n1, n2, mu1, mu2, apply(p.vals <= alpha, 2, sum) / Msimul)
+}
+
+dimnames(abs)[[2]] <- dimnames(absS1)[[2]]
+dimnames(rel)[[2]] <- dimnames(relS1)[[2]]
+absS2 <- abs
+relS2 <- rel
+
+
+plot(0, 0, type = "n", xlim = c(-0.1, 2.1), ylim = c(0, 1), xlab = expression("location difference " * mu), ylab = "proportion of rejected null hypothesis")
+title(expression("Results for Setting 2:  Gam(2, 1) vs. Gam(2, 1) + " * mu))
+move <- 0.015
+points(rel[, 4] - move, rel[, 5], col = 1, pch = 3, lwd = 2) ## logcon test
+points(rel[, 4], rel[, 6], col = 3, pch = 5, lwd = 2) ## logcon smooth test
+points(rel[, 4], rel[, 7], col = 2, pch = 4, lwd = 2) ## K-S test
+abline(h = c(1, alpha, 0), lty = 2)
+
+
+## ------------------------------
+## setting 3
+## ------------------------------
+alpha <- 0.05
+n1 <- 20
+n2 <- 25
+taus <- c(1, 1.5, 2, 2.5, 3)
+setting <- 3
+
+# number of decisicions on H_1 (which is true)
+abs <- matrix(NA, nrow = length(mus), ncol = 9)
+rel <- matrix(NA, nrow = length(mus), ncol = 6)
+for (i in 1:length(taus)) {
+  tau <- taus[i]
+
+  name <- paste(path.res, "pvals_setting=", setting, "_n1=", n1, "_n2=", n2, "_tau=", tau, ".txt", sep = "")
+  p.vals <- read.table(file = name, sep = ",", header = TRUE)
+  abs[i, 1:6] <- c(n1, n2, tau, apply(p.vals <= alpha, 2, sum))
+  abs[i, 7:9] <- apply(is.na(p.vals) == FALSE, 2, sum, na.rm = TRUE)
+
+  rel[i, 1:6] <- c(n1, n2, tau, apply(p.vals <= alpha, 2, sum) / Msimul)
+}
+
+abs <- as.data.frame(abs)
+dimnames(abs)[[2]] <- c("n1", "n2", "tau", "H1 logcon", "H1 logcon smooth", "H1 K-S", "#tests Logcon", "#tests logcon smooth", "#tests K-S")
+rel <- as.data.frame(rel)
+dimnames(rel)[[2]] <- dimnames(abs)[[2]][1:6]
+absS3 <- abs
+relS3 <- rel
+
+
+plot(0, 0, type = "n", xlim = c(0.9, 3.1), ylim = c(0, 1), xlab = expression("alternative shape parameter " * tau), ylab = "proportion of rejected null hypothesis")
+title(expression("Results for Setting 3:  Gam(2, 1) vs. Gam(" * tau * ", 1)"))
+move <- 0.015
+points(rel[, 3] - move, rel[, 4], col = 1, pch = 3, lwd = 2) ## logcon test
+points(rel[, 3], rel[, 5], col = 3, pch = 5, lwd = 2) ## logcon smooth test
+points(rel[, 3], rel[, 6], col = 2, pch = 4, lwd = 2) ## K-S test
+abline(h = c(1, alpha, 0), lty = 2)
+@
+\end{center}
+\vspace*{-0.8cm}
+\caption{Proportion of rejected null hypothesis at $\alpha = 0.05$ for the null hypothesis of equal distribution functions
+for two samples of size $n_1 = 20$ and $n_2 = 25$. Horizontal offset of points only to increase legibility.}
+\label{fig: sim1}
+\end{figure}
+
+
+\clearpage
+
+% -----------------------------------------------------
+\section{Final remarks}
+% -----------------------------------------------------
+In \citet[Figure 3]{mizera_09} quasi-concave density estimation, a generalization of log-concave density estimation,
+was illustrated on radial and rotational velocities of the
+Bright Star Catalog, see \cite{hoffleit_91}. For convenience, we also included this dataset in \pkg{logcondens}
+as a dataframe named \code{brightstar}.
+
+
+
+
+\begin{appendix}
+
+% -----------------------------------------------------
+\section{Density, distribution and quantile function} \label{sec: dest}
+% -----------------------------------------------------
+
+Formulas to compute the log-density and density function at a given point $x_0 \in \R$ are provided in Section~\ref{sec: computation}. The distribution function estimator $\dest$ and its integral $I(t) := \int_{x_1}^t \dest(r) \d r$ are implemented in the functions \code{evaluateLogConDens} and \code{intF}. For completeness, we provide here the corresponding formulas. Note that \eqref{eq: dest} is also provided in \citet[Theorem 2.1]{duembgen_07}.
+Recall from Section~\ref{sec: computation} the function $J$. Here, we use a slightly generalized version, defined as
+%, defined as
+%\bea
+%    J(r,s) &:=& \int_0^1 \exp((1-t)r + ts) \d t\\
+% &=&\left\{\barr{cl}
+%        \displaystyle
+%            \frac{\exp(r) - \exp(s)}{r - s} & \mbox{if } r \ne s \, , \\
+%            \exp(r)                         & \mbox{if } r = s \, .
+%        \earr\right.
+%\eea
+\bea
+    \tilde J(r,s,v) &:=& \int_0^v \exp \bigl( (1 - t) r + t s \bigr) \, \d t
+\eea for arbitrary $r,s  \in \R$ and $v \in [0,1]$. The relation $\tilde J(r,s,v) = \exp(r) \tilde J(0,s-r,v)$ holds,
+and
+\bea
+    \tilde J(r,s,v) &=& \left\{\barr{cl}
+        \bigl( \exp(r) - \exp(r+v(s-r)) \bigr) \big/ (r - s) & \mbox{if } r \ne s , \\
+        v \exp(r)                         & \mbox{if } r = s ,
+    \earr\right.
+\eea
+see also the manual of \pkg{logcondens}, especially the help file \code{Jfunctions}.
+
+In what follows, we will use a simple generic parametric model. Namely, define for $\theta \in \R$ a probability
+density on $[0, 1]$ as
+\bea
+    g_\theta(x) \ := \ J(0, \theta)^{-1} \exp(\theta x) &=& \left\{\barr{cl}
+            \theta e^{\theta x} / (e^\theta - 1) & \mbox{if } \theta \ne 0 \\
+            1 & \mbox{if } \theta = 0.
+        \earr\right.
+\eea
+The distribution and quantile function corresponding to $g_\theta$ are given as
+\bea
+    G_\theta(r)&=& \left\{\barr{cl}
+            (e^{\theta r} - 1)/(e^\theta - 1) & \mbox{if } \theta \ne 0 \\
+            r & \mbox{if } \theta = 0
+        \earr\right.
+\eea
+and
+\bea
+    G_\theta^{-1}(u) &=& \left\{\barr{cl}
+            \log \left( 1 + (e^{\theta} - 1) u \right) / \theta
+                & \mbox{if } \theta \ne 0 \\
+            u   & \mbox{if } \theta = 0
+        \earr\right.
+\eea
+for $r, u \in [0,1]$, respectively. Note that $G_\theta^{-1}$ is implemented as \code{qloglin} in
+\pkg{logcondens}.
+For $|\theta| \le 10^{-6}$ a Taylor approximation is used, because
+$$
+    G_\theta^{-1}(u)
+    \ = \ u + \theta u(1 - u)/2 + O(\theta^2)
+$$
+as $\theta \to 0$, uniformly in $u \in [0,1]$.
+Now, let $\ve{\varphi} \in \R^m$ where this vector is identified with a function $\varphi : \R \to [-\infty,\infty)$ via
+\bea
+    \varphi(x) &:=& \left\{\barr{cl} - \infty
+                & \mbox{for } x \not\in [x_1, x_m] \, , \\
+            \displaystyle
+            \varphi_j + \frac{x - x_j}{\Del x_{j+1}} \, \Del\varphi_{j+1}
+                & \mbox{for } x \in [x_j, x_{j+1}], \ 1 \le j < m \, ,
+        \earr\right.
+\eea where $\Del v_{j+1} := v_{j+1} - v_j$ for any $\ve{v} \in \R^m$.
+Suppose further that $f := \exp(\varphi)$ is a probability density on $\R$ and let $F$ be the corresponding distribution function. Then $F(x_1) = F_1 := 0$, and
+\bea
+    F(x_j) = F_j &:=& \sum_{i=1}^{j-1} \Del x_{j+1} J(\varphi_i, \varphi_{i+1})
+    \quad\mbox{for } 2 \le j \le m \label{eq: dest}
+\eea
+with $F_m = 1$. For a proof we refer to \citet[Theorem 2.1]{duembgen_07}.
+To compute the quantile function of $F$, note that for any $x \in [x_j, x_{j+1}]$ by again exploiting the
+special structure of $\varphi$,
+\bean
+    F(x) - F(x_j) &=& \int_{x_j}^x \exp (\varphi(t)) \d t \nonumber \\
+    &=& \int_{x_j}^x \exp \Bl(\varphi_j + \frac{x - x_j}{\Del x_{j+1}} \, \Del\varphi_{j+1}\Br) \d t \nonumber \\
+    &=& \Delta x_{j+1} \int_0^{(x-x_j)/\Delta x_{j+1}} \exp \Bl((1-v)\varphi_j + v \varphi_{j+1}\Br) \d v \nonumber \\
+    &=& \Delta x_{j+1}\tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{x-x_j}{\Delta x_{j+1}}\Br). \label{eq: F(x)}
+\eean
+Some tedious computations lead to the corresponding quantile function
+\bea
+    F^{-1}(u) &=& x_j + \Del x_{j+1} G_{\Del x_{j+1} \Del\varphi_{j+1}}^{-1} \Bl( (u - F_j)/\Del F_{j+1} \Br)
+    \quad\mbox{for } u \in [F_j, F_{j+1}], 1 \le j < m \, .
+\eea This function is the basis of \code{quantilesLogConDens} in \pkg{logcondens}.
+
+
+%--------------------------------------------------------------
+\section{The integral of $F$ at an arbitrary $x_0$}
+\label{sec: intF}
+%--------------------------------------------------------------
+Recall the definition $s_j = \Del \varphi_j / \Del x_j$ from Section~\ref{sec: computation}.
+In addition, we define $f_j = f(x_j)$ for $j = 1, \ldots, m$.
+To be able to compute the process $H = H(\cdot,\lest)$ introduced in \eqref{eq: H(t)} the aim is to derive an explicit formula for
+\bea
+    I_j(x) &=& \int_{x_j}^x F(r) \d r
+\eea for any $j = 1, \ldots, m-1$ and $x \in [x_j, x_{j+1}]$. Using \eqref{eq: F(x)} we can write
+\bea
+    I_j(x) &=& \int_{x_j}^x \Bl(F_j + \Delta x_{j+1} \tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{r-x_j}{\Delta x_{j+1}}\Br)\Br) \d r \\
+    &=& (x-x_j) F_j + \Delta x_{j+1} \int_{x_j}^x \tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{r-x_j}{\Delta x_{j+1}}\Br) \d r.
+\eea But,
+\bean
+    \int_{x_j}^x \tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{r-x_j}{\Delta x_{j+1}}\Br) \d r &=& \Delta x_{j+1}\int_{0}^{(x-x_j)/\Delta x_{j+1}} \tilde J(\varphi_j, \varphi_{j+1}, y) \d y \label{intF}\\
+    &=&-s_{j+1}^{-1} \int_{0}^{(x-x_j)/\Delta x_{j+1}} (\exp(\varphi_{j})-\exp(\varphi_j + y \Delta \varphi_{j+1}) ) \d y \nonumber\\
+    &=&-\frac{x-x_j}{\Delta \varphi_{j+1}}f_j + s_{j+1}^{-1} \tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{x-x_j}{\Delta x_{j+1}}\Br) \nonumber.
+\eean Putting the pieces together we receive
+\bea
+    I_j(x) &=& (x-x_j) F_j + \Delta x_{j+1} \Bl( s_{j+1}^{-1} \tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{x-x_j}{\Delta x_{j+1}}\Br) -\frac{x-x_j}{\Delta \varphi_{j+1}}f_j \Br).
+\eea Specifically, for $x=x_{j+1}$,
+\bea
+    I_j(x_{j+1}) &=& \Delta x_{j+1} \Bl[F_j + s_{j+1}^{-1}\Bl(\tilde J(\varphi_j,\varphi_{j+1}, 1) - f_j\Br) \Br].
+\eea
+We finally get
+$$
+    I(t)
+    \ = \ \int_{x_1}^t F(r) \d r
+    \ = \ \Bl(\sum_{i=1}^{i_0} I_i(x_{i+1})\Br) + I_{i_0}(t)
+$$
+where $i_0 = \min\{m-1 \, , \ \max\{i \ : \ x_i \le t\}\}$.
+
+\paragraph{Approximation for $s_{j+1} \to 0$.} Since we divide by $s_{j+1}$ in the compuation of
+$I_j(x)$ this expression becomes numerically unstable or even undefined
+once the slope $s_{j+1}$ of $\varphi$ approaches or even equals 0. To avoid these problems, we compute
+the limit for $a : = s_{j+1} \to 0$ in the integral in \eqref{intF}:
+\bea
+    \lim_{a \to 0}\int_{x_j}^x \tilde J\Bl(\varphi_j, \varphi_{j+1}, \frac{r-x_j}{\Delta x_{j+1}}\Br) \d r
+    &=& \lim_{a \to 0} \int_{0}^{(x-x_j)/\Delta x_{j+1}}
+        \frac{\exp(\varphi_j + y \Delta \varphi_{j+1}) - \exp \varphi_{j}}{a} \d y \\
+    &=& f_j \lim_{a \to 0} \int_{0}^{(x-x_j)/\Delta x_{j+1}}
+        \frac{\exp(y a \Delta x_{j+1}) - 1}{a} \d y \\
+    &=& f_j \int_{0}^{(x-x_j)/\Delta x_{j+1}} y \Delta x_{j+1} \d y \\
+    &=& f_j \frac{(x - x_j)^2}{2 \Delta x_{j+1}} .
+\eea
+This approximation is used in \code{intF} once $s_{j+1} \le 10^{-6}$.
+
+
+%--------------------------------------------------------------
+\section{The smoothed log-concave density estimator}
+\label{sec: formula smoothed}
+%--------------------------------------------------------------
+
+For $\gamma > 0$ and $x \in \R$ recall the density function $\phi_\gamma$ of a centered normal density as
+\bea
+    \phi_\gamma(x) &=& \frac{1}{\sqrt{2\pi} \gamma} \exp(-x^2/(2\gamma^2)) .
+\eea
+Its distribution function is denoted by $\Phi_\gamma$. Elementary calculations reveal that for arbitrary numbers $a$, $x$ and $\gamma > 0$,
+$$
+    e^{ay} \phi_\gamma(x - y)
+    \ = \ \exp(ax + a^2 \gamma^2/2) \phi_\gamma(y - x - a \gamma^2) ,
+$$
+so that for real boundaries $u < v$,
+\bean
+    q_\gamma(x,a,u,v)
+    & := & \int_u^v e^{a(y-u)} \phi_\gamma(x - y) \d y
+    \nonumber \\
+    &=& \exp(a(x-u) + a^2 \gamma^2/2)
+        \bigl( \Phi_\gamma(v - x - a \gamma^2) - \Phi_\gamma(u - x - a \gamma^2) \bigr)
+    \nonumber \\
+    &=& \exp(a(x-u) + a^2 \gamma^2/2)
+        \bigl( \Phi_\gamma(x - u + a \gamma^2) - \Phi_\gamma(x - v + a \gamma^2) \bigr) .
+    \label{int1}
+\eean
+The smoothed log-concave density estimator then amounts to
+\bea
+    \est^*(x)
+    &=& \int_{-\infty}^\infty \phi_\gamma(x - y) \est(y) \d y \\
+    &=& \sum_{j=2}^{m} \int_{x_{j-1}}^{x_j} \phi_\gamma(x - y) \est(y) \d y \\
+    &=& \sum_{j=2}^{m} \hat f_{j-1}
+        \int_{x_{j-1}}^{x_j} \exp(\widehat{s}_j(y - x_{j-1})) \phi_\gamma(x - y) \d y \\
+    &=& \sum_{j=2}^{m} \hat f_{j-1} \, q_\gamma(x, \widehat{s}_j, x_{j-1}, x_j) .
+\eea
+The function \code{evaluateLogConDens} implements $\est^*$ in \pkg{logcondens}.
+However, note that it is most convenient to compute $\est^*$ via specifying \code{smoothed = TRUE} in \code{logConDens}.
+
+In extreme situations, e.g.\ data sets containing extreme spacings, numerical problems may occur in \eqref{int1}. 
+For it may happen that the exponent is rather large while the difference of Gaussian CDFs is very 
+small. To moderate these problems, we are using the following bounds in the function \code{Q00} implementing
+$q_\gamma$ in \pkg{logcondens}:
+$$
+    \exp(- m^2/2) \bigl( \Phi(\delta) - \Phi(-\delta) \bigr)
+    \ \le \ \Phi(b) - \Phi(a) \ \le \ \exp(- m^2/2) \cosh(m\delta) \bigl( \Phi(\delta) - \Phi(-\delta) \bigr)
+$$
+for arbitrary numbers $a < b$ and $m := (a+b)/2$, $\delta := (b-a)/2$.
+
+
+%--------------------------------------------------------------
+\section{The smoothed log-concave CDF estimator}
+\label{sec: formula smoothed CDF}
+%--------------------------------------------------------------
+
+Using partial integration, we get for arbitrary numbers $x$, $a \ne 0$ and real boundaries $u < v$:
+\bea
+    Q_\gamma(x,a,u,v)
+    & := & \int_u^v e^{a(y-u)} \Phi_\gamma(x - y) \d y
+    \\
+    & = & \Bigl[ a^{-1} e^{a(y-u)} \Phi_\gamma(x - y) \Bigr]_{y=u}^v
+        + a^{-1} \int_u^v e^{a(y-u)} \phi_\gamma(x - y) \d y
+    \\
+    & = & 
+        + a^{-1} \bigl( e^{a(v-u)} \Phi_\gamma(x - v) - \Phi_\gamma(x - u) \bigr)
+        + a^{-1} q_\gamma(x,a,u,v)
+\eea
+with $q_\gamma(x,a,u,v)$ as in \eqref{int1}. As $a \to 0$, this converges to
+\bea
+    Q_\gamma(x,0,u,v)
+    & := & \int_u^v \Phi_\gamma(x - y) \d y
+    \\
+    & = & \Bigl[ (y - x) \Phi_\gamma(x - y) \Bigr]_{y=u}^v
+        + \int_u^v (y - x) \phi_\gamma(x - y) \d y
+    \\
+    & = & \Bigl[ (y - x) \Phi_\gamma(x - y) - \gamma^2 \phi_\gamma(x - y) \Bigr]_{y=u}^v
+    \\
+    & = & (x - u) \Phi_\gamma(x - u) - (x - v) \Phi_\gamma(x - v)
+        + \gamma^2 \bigl( \phi_\gamma(x - u) - \phi_\gamma(x - v) \bigr) .
+\eea
+This leads to the formula
+\bea
+    \dest^*(x)
+    &=& \int_{-\infty}^\infty \Phi_\gamma(x - y) \est(y) \d y \\
+    &=& \sum_{j=2}^{m} \int_{x_{j-1}}^{x_j} \Phi_\gamma(x - y) \est(y) \d y \\
+    &=& \sum_{j=2}^{m} \hat f_{j-1}
+        \int_{x_{j-1}}^{x_j} \exp(\widehat{s}_j(y - x_{j-1})) \Phi_\gamma(x - y) \d y \\
+    &=& \sum_{j=2}^{m} \hat f_{j-1} \, Q_\gamma(x, \widehat{s}_j, x_{j-1}, x_j) .
+\eea
+This representation is implemented in \code{evaluateLogConDens} and \code{logConDens}, where for numerical reasons, 
+$Q_\gamma(x, \widehat{s}_j,x_{j-1},x_j)$ is replaced with $Q_\gamma(x,0,x_{j-1},x_j)$ in case of $|\widehat{s}_j| \le 10^{-6}$.
+
+
+
+%--------------------------------------------------------------
+\section{Computation of the two-sample test statistic}
+\label{sec: test comp details}
+%--------------------------------------------------------------
+
+To calculate $\mathbb{K}$, the built-in \proglang{R} function \code{ks.test} was used. This function computes an exact $p$-value in a two-sample problem if the product of the respective sample size is smaller than $10^4$, as fulfilled in our simulation examples. As to the computation of $\hat K_n$, define $D := \dest_X - \dest_Y$, and let $z_1 < \ldots < z_N$ denote the sorted pooled observations
+$X_1$, \ldots, $X_{n_1}$, $Y_1$, \ldots, $Y_{n_2}$, i.e.\ $N = n_1 + n_2$. The goal is to find
+$$
+    x_* \ := \ \argmax_{x \in \R} |D(x)| ,
+$$
+enabling us to compute $\widehat{K} = |D(x_*)|$. Note that in general $D$ is not unimodal, let alone concave. However, again thanks to the special structure of the log-density estimate computation of $x_X$ is possible according to the following scheme. With the order statistics $X_{(i)}$ and $Y_{(j)}$ 
+of the two samples define
+$$
+    L \ := \ \max\{X_{(1)}, Y_{(1)}\}
+    \quad\text{and}\quad
+    R \ := \ \min\{X_{(n)}, Y_{(n)}\}.
+$$
+First, we sort out a simple pathological case: If $R \le L$, then any point $x$ between $R$ and $L$ yields $|D(x)| = 1$, yielding $\widehat{K} = (n_1 n_2 / (n_1 + n_2)))^{1/2}$. Otherwise, due to the monotonicity of distribution functions one has
+$$
+    \argmax_{x \in \R} |D(x)|
+    \ = \ \argmax_{x \in [L,R]} |D(x)| .
+$$
+A necessary condition for a $x \in (L,R)$ to be a maximum of $|D(\cdot)|$ is $D'(x) = 0$, which is equivalent to $\lest_X (x) = \lest_Y(x)$. As for the computation of $x$, proceed as follows:
+\begin{enumerate}
+\item Identify all $k \in \{1,\ldots,N-1\}$ such that there exists a $y_k \in [z_k,z_{k+1}]:=\II_k$
+with $\lest_X(y_k)=\lest_Y(y_k)$. Let $\KK$ denote the set of these $k$'s.
+\item Since both $\lest_X$ and $\lest_Y$ are linear on every interval $\II_k$, we can find for each $k$ the point $y_k$ 
+where these two functions intersect via the equality
+\bea
+    \lefteqn{\Bl(1-\frac{y_k-z_k}{z_{k+1}-z_k}\Br) \lest_X(z_k) + \frac{y_k-z_k}{z_{k+1}-z_k}\lest_X(z_{k+1}) = } \\
+    &&\Bl(1-\frac{y_k-z_k}{z_{k+1}-z_k}\Br) \lest_Y(z_k) + \frac{y_k-z_k}{z_{k+1}-z_k}\lest_Y(z_{k+1})
+\eea yielding
+\bea
+    y_k &=& z_k - (\lest_Y(z_k)-\lest_X(z_k))\Bl(\frac{\lest_X(z_{k+1})-\lest_X(z_k)}{z_{k+1}-z_k}-\frac{\lest_Y(z_{k+1})-\lest_Y(z_k)}{z_{k+1}-z_k}\Br)^{-1}.
+\eea
+\end{enumerate}
+Note that if the denominator, the difference of slopes of $\lest_X$ and $\lest_Y$ on $[z_k, z_{k + 1}]$,
+is zero then the two functions must match on that interval (otherwise they would not intersect). This in turn implies that the difference
+$D$ is constant on that interval so that we can consider $y_k = z_k$ a possible point where the maximum of $D$ occurs.
+Consequently, $|D(\cdot)|$ is maximal at one (or more) points in the set
+\bea
+    \RR = \{L,R\} \cup \{y_k \ : \: k \in \KK\}
+\eea and
+\bea
+    \hat K_n &=& \Bl(n_1 n_2 / (n_1 + n_2))\Br)^{1/2} \max\{D(r) \ : \ r \in \RR\}.
+\eea
+Figure \ref{fig: 2test} gives an example. 
+
+\begin{figure}[t!]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+<<label = plot2sample, eval = TRUE, fig = TRUE, echo = FALSE, width = 8, height = 5>>=
+par(mar = c(4.5, 4, 1, 1), las = 1)
+set.seed(111)
+n1 <- 20
+n2 <- 25
+x <- sort(rgamma(n1, 2, 1))
+y <- sort(rgamma(n2, 2, 1) + 0.5)
+res1 <- activeSetLogCon(x)
+res2 <- activeSetLogCon(y)
+
+grid <- unique(sort(c(seq(0, max(x, y), length.out = 500), x, y)))
+Fhat <- matrix(NA, ncol = 2, nrow = length(grid))
+for (i in 1:nrow(Fhat)) {
+  Fhat[i, 1] <- evaluateLogConDens(grid[i], res1, which = 3)[4]
+  Fhat[i, 2] <- evaluateLogConDens(grid[i], res2, which = 3)[4]
+}
+
+plot(c(0, x), 0:n1 / n1, type = "s", xlim = c(range(c(x, y)) + c(0, 1)), ylim = c(0, 1), main = "", xlab = "data", ylab = "distribution functions", lwd = 2)
+lines(c(0, y), 0:n2 / n2, type = "s", col = 2, lwd = 2)
+lines(grid, Fhat[, 1], lwd = 2)
+rug(x, col = 1, lwd = 2)
+lines(grid, Fhat[, 2], col = 2, lwd = 2)
+rug(y, col = 2, lwd = 2)
+segments(c(0, max(x)), c(0, 1), c(min(x), 20), c(0, 1), col = 1, lwd = 2)
+segments(c(0, max(y)), c(0, 1), c(min(y), 20), c(0, 1), col = 2, lwd = 2)
+md <- maxDiffCDF(res1, res2, which = c("MLE", "smooth")[1])
+stat <- md$test.stat[1]
+loc <- md$location[1]
+abline(v = loc, lty = 4)
+abline(h = c(evaluateLogConDens(loc, res1, which = 3)[, "CDF"], evaluateLogConDens(loc, res2, which = 3)[, "CDF"]), lty = 4)
+
+legend(4, 0.6, c(expression(Gamma * "(2, 1)"), expression(Gamma * "(2, 1) + 0.5")), lty = 1, col = 1:2, bty = "n", lwd = 3)
+@ 
+\end{center}
+\vspace*{-1cm}
+\caption{Estimated empirical and log-concave distribution functions for Gam$(2,1)$ and Gam$(2,1)+0.5$. 
+Horizontal and vertical lines indicate location of largest difference between CDFs.}
+\label{fig: 2test}
+\end{figure}
+
+The computation of $\hat K_n^*(\dest_X,\dest_Y)$ appears to be less straightforward than that of
+$\hat K_n(\dest_X,\dest_Y)$. In \code{logconTwoSample} we first approximate the function $(D^*)'_x = (\partial / \partial x)(D^*)(u, x)$
+for $u = z_1 - 0.1 \cdot (z_N - z_1)$ on a sufficiently dense equidistant grid (the number of elements in that 
+grid can be provided to \code{logconTwoSample} using the argument \code{n.grid}). Then, 
+similar to the computation of $\hat K_n(\dest_X,\dest_Y)$, we identify those grid intervals where 
+$(D^*)'_x$ changes sign. To finally find the maximum of the latter function we then
+invoke \code{uniroot} to find the precise location of the zeros on these intervals, compute the value of
+$(D^*)'_x$ at each of these zeros and identify the largest of these values. In general, the computation of 
+$\hat K_n^*(\dest_X,\dest_Y)$ is more time-consuming than that of $\hat K_n(\dest_X,\dest_Y)$. However,
+since on the level of CDFs the MLE and its smoothed version are very similar, differences with respect to the smooth
+two-sample test in terms of power are very small. For these reasons we omitted the smooth version of the test in our 
+small simulation study reported on in Section~\ref{sec: 2sample}.
+
+\end{appendix}
+
+
+\section*{Acknowledgments}
+We thank Dominic Schuhmacher, an associate editor and two referees for constructive comments.
+The work of Lutz D\"{u}mbgen was supported by the Swiss National Science Foundation.
+
+
+% -----------------------------------------------------
+% \section{References} \label{sec: references}
+% -----------------------------------------------------
+%\nocite{*}
+\bibliography{stat}
+
+
+
+
+\end{document}
+
+
+
+
+

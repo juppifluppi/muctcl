@@ -1,0 +1,8 @@
+formatDatetime          Format a Datetime vector as a string vector
+parseDatetime           Parse a Datetime vector from a string vector
+RcppCCTZ-package        A Simple Wrapper to the CCTZ Library for Time
+                        Zone Calculations
+toTz                    Shift datetime object from one timezone to
+                        another
+tzDiff                  Return difference between two time zones at a
+                        given date.
