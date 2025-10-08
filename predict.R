@@ -1,4 +1,4 @@
-.libPaths("./")
+.libPaths("./rpackages/")
 library("caret")
 library("randomForest")
 
