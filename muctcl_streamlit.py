@@ -1,37 +1,27 @@
-from rdkit import Chem, RDConfig
-from rdkit.Chem import AllChem, rdFingerprintGenerator, MACCSkeys, Descriptors, Draw
+from rdkit import Chem, RDConfig, DataStructs
+from rdkit.Chem import AllChem, rdFingerprintGenerator, MACCSkeys, Descriptors, Draw, rdDepictor
 from rdkit.Chem.MolStandardize import rdMolStandardize
 from rdkit.Chem.Fingerprints import FingerprintMols
-from rdkit.DataStructs import cDataStructs
-from io import StringIO
 from mordred import Calculator, descriptors
-from rdkit.Chem import rdDepictor
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import sys, os, shutil
-import matplotlib.pyplot as plt
-import streamlit as st
-from streamlit_ketcher import st_ketcher
-import time
-import subprocess
-from PIL import Image
-import uuid
-from filelock import Timeout, FileLock
-from streamlit_echarts import st_echarts
-from rdkit import Chem
-from rdkit import DataStructs
-from rdkit.Chem import Draw
-from rdkit.Chem import AllChem
-from rdkit.Chem.Fingerprints import FingerprintMols
 from scopy.ScoPretreat import pretreat
 import scopy.ScoDruglikeness
 from dimorphite_dl import protonate_smiles
-import streamlit as st
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
+from streamlit_ketcher import st_ketcher
+from streamlit_echarts import st_echarts
 from PIL import Image
-from io import BytesIO
+from io import StringIO, BytesIO
+from filelock import Timeout, FileLock
+import uuid
+import sys
+import os
+import shutil
+import subprocess
+import time
 
 def show_mol(d2d,mol,legend='',highlightAtoms=[]):
     d2d.DrawMolecule(mol,legend=legend, highlightAtoms=highlightAtoms)
@@ -103,7 +93,6 @@ st.title('bile/mucin interaction model')
 with st.form(key='my_form_to_submit'):
     with st.expander("More information"):
         
-        st.caption(""":black[Background]""")
         st.caption("""muctcl predicts interactions of drugs with bile and mucin, in binary and ternary mixtures. Models are trained based on classifications derived from ¹H-NMR measurements. Binomial logistic regression models are used for classifications
         of binary drug-bile and drug-mucin mixtures, whereas a 4-class random forest model is used for a prediction of mixtures. When selecting batch mode, users can input names and corresponding SMILES codes of multiple molecules in order to output all predictions
         in an exportable table format.""")
