@@ -1,8 +1,0 @@
-RPushbullet-package     R interface to the Pushbullet service
-pbGetChannelInfo        Details for a channel
-pbGetDevices            Get registered Pushbullet devices
-pbGetPosts              Get messages posted via Pushbullet
-pbGetUser               Get info about a user
-pbPost                  Post a message via Pushbullet
-pbSetup                 Create a JSON config file
-pbValidateConf          Check if a configuration is valid
