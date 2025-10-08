@@ -33,9 +33,6 @@ import numpy as np
 from PIL import Image
 from io import BytesIO
 
-processx=subprocess.Popen(["Rscript", "bootstrap_r.R"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-processx.communicate()
-
 def show_mol(d2d,mol,legend='',highlightAtoms=[]):
     d2d.DrawMolecule(mol,legend=legend, highlightAtoms=highlightAtoms)
     d2d.FinishDrawing()
