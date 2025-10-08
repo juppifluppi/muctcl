@@ -1,0 +1,13 @@
+bSpline                 B-Spline Basis for Polynomial Splines
+bernsteinPoly           Generalized Bernstein Polynomial Basis
+                        Functions
+cSpline                 C-Spline Basis for Polynomial Splines
+deriv                   Derivatives of Spline Basis Functions
+iSpline                 I-Spline Basis for Polynomial Splines
+knots                   Extract Knots from the Given Object
+mSpline                 M-Spline Basis for Polynomial Splines
+naturalSpline           Natural Cubic Spline Basis for Polynomial
+                        Splines
+plot.splines2           Visualize Spline Basis Functions
+predict                 Compute Spline Function for Given Coefficients
+update                  Update Spline Basis Functions
