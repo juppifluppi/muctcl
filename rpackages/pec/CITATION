@@ -1,0 +1,13 @@
+## R package reference generated from DESCRIPTION metadata
+citation(auto = meta)
+bibentry(bibtype = "Article",
+  title = "Evaluating Random Forests for Survival Analysis Using Prediction Error Curves",
+  author       = c(person(c("Ulla B."),"Mogensen"),
+                   person(c("Hemant"), "Ishwaran"),
+                   person(c("Thomas A."),"Gerds")),
+  journal      = "Journal of Statistical Software",
+  year         = "2012",
+  volume       = "50",
+  number       = "11",
+  pages        = "1--23",
+  doi = "10.18637/jss.v050.i11")

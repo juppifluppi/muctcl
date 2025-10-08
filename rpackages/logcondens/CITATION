@@ -1,0 +1,4 @@
+citHeader("To cite logcondens in publications use:")
+
+citation(auto = meta)
+

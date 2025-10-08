@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Klaus Kähler Holst" />
+
+<meta name="date" content="2024-02-22" />
+
+<title>Average Treatment Effects</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 800px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 20px;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 0;
+padding: 4px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table:not([class]) {
+margin: auto;
+min-width: 40%;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table[summary="R argblock"] {
+width: 100%;
+border: none;
+}
+table:not([class]) th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table:not([class]) td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table:not([class]), table:not([class]) th, table:not([class]) td {
+border-left-style: none;
+border-right-style: none;
+}
+table:not([class]) tr.odd {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 13px;
+padding-bottom: 1px;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f5f5f5;
+border-radius: 3px;
+color: #333;
+}
+pre {
+overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0 10px 0;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: white;
+border: #f5f5f5 1px solid;
+}
+pre:not([class]) code {
+color: #444;
+background-color: white;
+}
+code {
+font-family: monospace;
+font-size: 90%;
+}
+p > code, li > code {
+padding: 2px 4px;
+color: #d14;
+border: 1px solid #e1e1e8;
+white-space: inherit;
+}
+div.figure {
+text-align: center;
+}
+table > caption, div.figure p.caption {
+font-style: italic;
+}
+table > caption span, div.figure p.caption span {
+font-style: normal;
+font-weight: bold;
+}
+p {
+margin: 0 0 10px;
+}
+table:not([class]) {
+margin: auto auto 10px auto;
+}
+img:not([class]) {
+background-color: #FFFFFF;
+padding: 2px;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+max-width: 100%;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f5f5f5;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f5f5f5;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f5f5f5;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+div.r-help-page {
+background-color: #f9f9f9;
+border-bottom: #ddd 1px solid;
+margin-bottom: 10px;
+padding: 10px;
+}
+div.r-help-page:hover {
+background-color: #f4f4f4;
+}
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Average Treatment Effects</h1>
+<h4 class="author">Klaus Kähler Holst</h4>
+<h4 class="date">2024-02-22</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Let <span class="math inline">\(Y\)</span> be a <em>binary
+response</em>, <span class="math inline">\(A\)</span> a <em>categorical
+treatment</em>, and <span class="math inline">\(W\)</span> a <em>vector
+of confounders</em>. Assume that we have observed <span class="math inline">\(n\)</span> i.i.d. observations <span class="math inline">\((Y_i, W_i, A_i) \sim P, i=1,\ldots,n\)</span>. In
+the following we are interested in estimating the target parameter <span class="math inline">\(\psi(P) = (E[Y(a)]\)</span>, where <span class="math inline">\(Y(a)\)</span> is the <em>potential outcome</em> we
+would have observed if treatment <span class="math inline">\(a\)</span>
+had been administered, possibly contrary to the actual treatment that
+was observed, i.e., <span class="math inline">\(Y = Y(A)\)</span>.</p>
+<!-- ```{r plotdag, echo=FALSE, fig.cap="DAG for the statistical model"} -->
+<!-- par(mfrow=c(1, 2)) -->
+<!-- m <- lvm(Y ~ A + W, A ~ W) -->
+<!-- plot(m, plot.engine="Rgraphviz") -->
+<!-- m <- lvm(Y ~ a + W) -->
+<!-- labels(m) <- c("Y" = "Y(a)") -->
+<!-- plot(m, plot.engine="Rgraphviz") -->
+<!-- ``` -->
+<p>Under the following assumptions</p>
+<ol style="list-style-type: decimal">
+<li>Stable Unit Treatment Values Assumption (the treatment of a specific
+subject is not affecting the potential outcome of other subjects)</li>
+<li>Positivity, <span class="math inline">\(P(A\mid
+W)&gt;\epsilon\)</span> for some <span class="math inline">\(\epsilon&gt;0.\)</span></li>
+<li>No unmeasured confounders, <span class="math inline">\(Y(a)\perp
+\!\!\! \perp A|W\)</span></li>
+</ol>
+<p>the target parameter can be identified from the observed data
+distribution as <span class="math display">\[E(E[Y|W,A=a]) =
+E(E[Y(a)|W]) = E[Y(a)]\]</span> or <span class="math display">\[E[Y
+I(A=a)/P(A=a|W)] = E[Y(a)].\]</span></p>
+<p>This suggests estimation via either <em>outcome regression</em> (OR,
+g-computation) or <em>inverse probability weighting</em> (IPW). These
+can eventually also be combined to a doubly-robust augmented inverse
+probability weighted (AIPW) estimator.</p>
+</div>
+<div id="simulation" class="section level1">
+<h1>Simulation</h1>
+<p>As an illustration we simulate from the following model <span class="math display">\[Y \sim
+Bernoulli(\operatorname{expit}\{A+X+Z\})\]</span> <span class="math display">\[A \sim
+Bernoulli(\operatorname{expit}\{X+Z\})\]</span> <span class="math display">\[Z \sim \mathcal{N}(X,1)\]</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lvm</span>(Y <span class="sc">~</span> A<span class="sc">+</span>X<span class="sc">+</span>Z, A<span class="sc">~</span>X<span class="sc">+</span>Z, Z<span class="sc">~</span>X)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">distribution</span>(m, <span class="sc">~</span>A<span class="sc">+</span>Y, <span class="fu">binomial.lvm</span>())</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sim</span>(m, <span class="fl">1e3</span>, <span class="at">seed=</span><span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">head</span>(d)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt;   Y A          X          Z</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; 1 0 0 -0.6264538  0.5085113</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; 2 1 1  0.1836433  1.2955752</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; 3 0 0 -0.8356286 -1.7064062</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; 4 1 1  1.5952808  1.8060124</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; 5 1 0  0.3295078  0.3989034</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; 6 0 0 -0.8204684 -2.4831172</span></span></code></pre></div>
+<!-- ```{r plotdag, echo=FALSE, fig.cap="DAG for the simulated model."} -->
+<!-- plot(m) -->
+<!-- ``` -->
+</div>
+<div id="estimation" class="section level1">
+<h1>Estimation</h1>
+<p>The target parameter, <span class="math inline">\(E[Y(a)]\)</span>
+can be estimated with the <code>targeted::ate</code> function:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">args</span>(ate)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; function (formula, data = parent.frame(), weights, offset, family = stats::gaussian(identity), </span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;     nuisance = NULL, propensity = nuisance, all, labels = NULL, </span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;     ...) </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p>The formula should be specified as
+<code>formula = response ~ treatment</code>, and the outcome regression
+specified as <code>nuisance = ~ covariates</code>, and propensity model
+<code>propensity = ~ covariates</code>. Alternatively, the formula can
+be specified with the notation
+<code>formula = response ~ treatment | OR-covariates | propensity-covariates</code>.
+<em>Parametric models</em> are assumed for both the outcome regression
+and the propensity model which defaults to be logistic regression models
+(as in the simulation). A linear model can be used for the outcome
+regression part by setting <code>binary=FALSE</code>.</p>
+<p>To illustrate this, we can estimate the (non-causal) marginal mean of
+each treatment value</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">ate</span>(Y <span class="sc">~</span> A, <span class="at">data=</span>d, <span class="at">nuisance=</span><span class="sc">~</span><span class="dv">1</span>, <span class="at">propensity=</span><span class="sc">~</span><span class="dv">1</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%   P-value</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; A=0   0.2937 0.02029 0.2539 0.3334 1.741e-47</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; A=1   0.8367 0.01660 0.8042 0.8692 0.000e+00</span></span></code></pre></div>
+<p>or equivalently</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">ate</span>(Y <span class="sc">~</span> A <span class="sc">|</span> <span class="dv">1</span> <span class="sc">|</span> <span class="dv">1</span>, <span class="at">data=</span>d)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%   P-value</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; A=0   0.2937 0.02029 0.2539 0.3334 1.741e-47</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; A=1   0.8367 0.01660 0.8042 0.8692 0.000e+00</span></span></code></pre></div>
+<p>In this simulation we can compare the estimates to the actual
+expected potential outcomes which can be approximated by Monte Carlo
+integration by simulating from the model where we intervene on <span class="math inline">\(A\)</span> (i.e., break the dependence on <span class="math inline">\(X, Z\)</span>):</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">sim</span>(<span class="fu">intervention</span>(m, <span class="st">&quot;A&quot;</span>, <span class="dv">0</span>), <span class="fl">2e5</span>)<span class="sc">$</span>Y)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.50023</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">sim</span>(<span class="fu">intervention</span>(m, <span class="st">&quot;A&quot;</span>, <span class="dv">1</span>), <span class="fl">2e5</span>)<span class="sc">$</span>Y)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.637795</span></span></code></pre></div>
+<p>The IPW estimator can then be estimated</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">ate</span>(Y <span class="sc">~</span> A <span class="sc">|</span> <span class="dv">1</span> <span class="sc">|</span> X<span class="sc">+</span>Z, <span class="at">data=</span>d)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%   P-value</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; A=0   0.4793 0.02678 0.4268 0.5318 1.278e-71</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; A=1   0.6669 0.03263 0.6029 0.7308 7.528e-93</span></span></code></pre></div>
+<p>Similarly, the OR estimator is obtained by</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">ate</span>(Y <span class="sc">~</span> A <span class="sc">|</span> A<span class="sc">*</span>(X<span class="sc">+</span>Z) <span class="sc">|</span> <span class="dv">1</span>, <span class="at">data=</span>d)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%    P-value</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; A=0   0.4858 0.02796 0.4310 0.5406  1.243e-67</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; A=1   0.7213 0.02600 0.6703 0.7723 2.248e-169</span></span></code></pre></div>
+<p>Both estimates are in this case consistent though we can see that the
+OR estimate is much more efficient compared to the IPW estimator.
+However, both of these models rely on correct model specifications.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">ate</span>(Y <span class="sc">~</span> A <span class="sc">|</span> <span class="dv">1</span> <span class="sc">|</span> X, <span class="at">data=</span>d)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%   P-value</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; A=0   0.4208 0.02706 0.3678 0.4739 1.543e-54</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; A=1   0.7072 0.03366 0.6412 0.7731 5.204e-98</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ate</span>(Y <span class="sc">~</span> A <span class="sc">|</span> A<span class="sc">*</span>X <span class="sc">|</span> <span class="dv">1</span>, <span class="at">data=</span>d)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%    P-value</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; A=0   0.4240 0.02617 0.3727 0.4752  4.794e-59</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; A=1   0.7474 0.02411 0.7001 0.7946 5.297e-211</span></span></code></pre></div>
+<p>In contrast, the doubly-robust AIPW estimator is consistent in the
+<em>intersection model</em> where either the propensity model or the
+outcome regression model is correctly specified</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">ate</span>(Y <span class="sc">~</span> A <span class="sc">|</span> A<span class="sc">*</span>X <span class="sc">|</span> X<span class="sc">+</span>Z, <span class="at">data=</span>d)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">summary</span>(a)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Augmented Inverse Probability Weighting estimator</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt;   Response Y (Outcome model: gaussian):</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt;   Y ~ A * X </span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt;   Exposure A (Propensity model: logistic regression):</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt;   A ~ X + Z </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std.Err    2.5%    97.5%    P-value</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt;  A=0               0.492322 0.02609  0.4412  0.54346  2.028e-79</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt;  A=1               0.663735 0.03068  0.6036  0.72386 8.429e-104</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; Outcome model:                                                 </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt;  (Intercept)       0.426675 0.02498  0.3777  0.47563  2.048e-65</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt;  A                 0.322545 0.03399  0.2559  0.38916  2.303e-21</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt;  X                 0.232605 0.01825  0.1968  0.26837  3.266e-37</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt;  A:X              -0.075738 0.02609 -0.1269 -0.02461  3.693e-03</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; Propensity model:                                              </span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt;  (Intercept)      -0.006421 0.08337 -0.1698  0.15699  9.386e-01</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt;  X                -0.863004 0.12123 -1.1006 -0.62539  1.091e-12</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt;  Z                -1.005211 0.09080 -1.1832 -0.82725  1.742e-28</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; Average Treatment Effect (constrast: &#39;A=1&#39; - &#39;A=0&#39;):</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err    2.5%  97.5%   P-value</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; ATE   0.1714 0.03661 0.09967 0.2432 2.831e-06</span></span></code></pre></div>
+<p>From the <code>summary</code> output we also get the estimates of the
+Average Treatment Effects expressed as a causal relative risk (RR),
+causal odds ratio (OR), or causal risk difference (RD) including the
+confidence limits.</p>
+<p>From the model object <code>a</code> we can extract the estimated
+coefficients (expected potential outcomes) and corresponding asympotic
+variance matrix with the <code>coef</code> and <code>vcov</code>
+methods. The estimated <em>influence function</em> can extracted with
+the <code>iid</code> method:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">coef</span>(a)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt;       A=0       A=1 </span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; 0.4923220 0.6637346</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="fu">vcov</span>(a)</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt;              A=0          A=1</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; A=0 0.0006807275 0.0001409887</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; A=1 0.0001409887 0.0009411920</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">iid</span>(a))</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;             A=0           A=1</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; 1 -0.0012182867 -0.0002821609</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; 2  0.0002438822  0.0002898771</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; 3 -0.0004583641 -0.0002555994</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; 4  0.0003753253  0.0002567340</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; 5  0.0011971267  0.0001267515</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; 6 -0.0004585485 -0.0001710518</span></span></code></pre></div>
+</div>
+<div id="multiple-treatments" class="section level1">
+<h1>Multiple treatments</h1>
+<p>As an example with multiple treatment levels, we simulate from a new
+model where the outcome is continuous and the treatment follows a
+proportional odds model</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lvm</span>(y <span class="sc">~</span> a<span class="sc">+</span>x, a<span class="sc">~</span>x)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">ordinal</span>(m, <span class="at">K=</span><span class="dv">4</span>, <span class="sc">~</span>a)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">transform</span>(<span class="fu">sim</span>(m, <span class="fl">1e4</span>), <span class="at">a=</span><span class="fu">factor</span>(a))</span></code></pre></div>
+<p>The AIPW estimator is obtained by estimating a logistic regression
+model for each treatment level (vs all others) in the propensity model
+(here a correct model is specified for both the OR and IPW part)</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">summary</span>(a2 <span class="ot">&lt;-</span> <span class="fu">ate</span>(y <span class="sc">~</span> a <span class="sc">|</span> a<span class="sc">*</span>x <span class="sc">|</span> x, <span class="at">data=</span>d, <span class="at">binary=</span><span class="cn">FALSE</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; Augmented Inverse Probability Weighting estimator</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt;   Response y (Outcome model: gaussian):</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt;   y ~ a * x </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;   Exposure a (Propensity model: logistic regression):</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;   a ~ x </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err    2.5%   97.5%    P-value</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; a=0  -1.5836 0.04754 -1.6767 -1.4904 2.510e-243</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; a=1  -0.8580 0.04183 -0.9400 -0.7760  1.634e-93</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; a=2  -0.3993 0.03513 -0.4681 -0.3304  6.175e-30</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; a=3   0.7297 0.02693  0.6770  0.7825 1.043e-161</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; Average Treatment Effect (constrast: &#39;a=1&#39; - &#39;a=0&#39;):</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%   P-value</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; ATE   0.7256 0.06138 0.6053 0.8459 3.069e-32</span></span></code></pre></div>
+<p>Choosing a different contrast for the association measures:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">summary</span>(a2, <span class="at">contrast=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; Augmented Inverse Probability Weighting estimator</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt;   Response y (Outcome model: gaussian):</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt;   y ~ a * x </span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt;   Exposure a (Propensity model: logistic regression):</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt;   a ~ x </span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err    2.5%   97.5%    P-value</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt; a=0  -1.5836 0.04754 -1.6767 -1.4904 2.510e-243</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt; a=1  -0.8580 0.04183 -0.9400 -0.7760  1.634e-93</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; a=2  -0.3993 0.03513 -0.4681 -0.3304  6.175e-30</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt; a=3   0.7297 0.02693  0.6770  0.7825 1.043e-161</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt; Average Treatment Effect (constrast: &#39;a=1&#39; - &#39;a=3&#39;):</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%    P-value</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt; ATE   -1.588 0.04665 -1.679 -1.496 6.079e-254</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">iid</span>(a2))</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt;             a=0           a=1           a=2           a=3</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; 1 -3.166428e-05 -5.457237e-06 -6.359929e-06 -6.789360e-06</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co">#&gt; 2  1.092943e-04  8.474978e-05  9.422265e-05  1.094304e-04</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt; 3  1.301396e-04  9.795983e-05  1.089817e-04  1.052614e-04</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; 4 -9.113452e-05  7.659446e-05 -7.048630e-05 -8.723959e-05</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt; 5  1.215406e-04  9.249439e-05  1.028746e-04  1.340444e-05</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt; 6  2.515487e-04  1.778471e-04  1.983432e-04  2.724858e-04</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="fu">estimate</span>(a2, <span class="cf">function</span>(x) x[<span class="dv">2</span>]<span class="sc">-</span>x[<span class="dv">4</span>])</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt;     Estimate Std.Err   2.5%  97.5%    P-value</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt; a=1   -1.588 0.04665 -1.679 -1.496 6.079e-254</span></span></code></pre></div>
+</div>
+<div id="sessioninfo" class="section level1">
+<h1>SessionInfo</h1>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co">#&gt; R version 4.3.2 (2023-10-31)</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co">#&gt; Platform: aarch64-apple-darwin22.6.0 (64-bit)</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co">#&gt; Running under: macOS Sonoma 14.3.1</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="co">#&gt; BLAS:   /Users/kkzh/.asdf/installs/R/4.3.2/lib/R/lib/libRblas.dylib </span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="co">#&gt; LAPACK: /Users/kkzh/.asdf/installs/R/4.3.2/lib/R/lib/libRlapack.dylib;  LAPACK version 3.11.0</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="co">#&gt; time zone: Europe/Copenhagen</span></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a><span class="co">#&gt; [1] targeted_0.5 lava_1.7.4  </span></span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a><span class="co">#&gt;  [1] Matrix_1.6-5         future.apply_1.11.1  jsonlite_1.8.8      </span></span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a><span class="co">#&gt;  [4] futile.logger_1.4.3  compiler_4.3.2       Rcpp_1.0.12         </span></span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a><span class="co">#&gt;  [7] parallel_4.3.2       jquerylib_0.1.4      globals_0.16.2      </span></span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a><span class="co">#&gt; [10] splines_4.3.2        yaml_2.3.7           fastmap_1.1.1       </span></span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a><span class="co">#&gt; [13] lattice_0.22-5       R6_2.5.1             knitr_1.45          </span></span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a><span class="co">#&gt; [16] future_1.33.1        nloptr_2.0.3         bslib_0.5.1         </span></span>
+<span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a><span class="co">#&gt; [19] rlang_1.1.3          cachem_1.0.8         xfun_0.41           </span></span>
+<span id="cb16-30"><a href="#cb16-30" tabindex="-1"></a><span class="co">#&gt; [22] sass_0.4.7           cli_3.6.2            formatR_1.14        </span></span>
+<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a><span class="co">#&gt; [25] futile.options_1.0.1 digest_0.6.34        grid_4.3.2          </span></span>
+<span id="cb16-32"><a href="#cb16-32" tabindex="-1"></a><span class="co">#&gt; [28] mvtnorm_1.2-4        timereg_2.0.5        evaluate_0.23       </span></span>
+<span id="cb16-33"><a href="#cb16-33" tabindex="-1"></a><span class="co">#&gt; [31] pracma_2.4.4         data.table_1.15.0    lambda.r_1.2.4      </span></span>
+<span id="cb16-34"><a href="#cb16-34" tabindex="-1"></a><span class="co">#&gt; [34] numDeriv_2016.8-1.1  listenv_0.9.1        codetools_0.2-19    </span></span>
+<span id="cb16-35"><a href="#cb16-35" tabindex="-1"></a><span class="co">#&gt; [37] survival_3.5-7       optimx_2023-10.21    parallelly_1.37.0   </span></span>
+<span id="cb16-36"><a href="#cb16-36" tabindex="-1"></a><span class="co">#&gt; [40] rmarkdown_2.25       tools_4.3.2          htmltools_0.5.6.1   </span></span>
+<span id="cb16-37"><a href="#cb16-37" tabindex="-1"></a><span class="co">#&gt; [43] mets_1.3.4</span></span></code></pre></div>
+</div>
+
+<script type="text/javascript">
+window.onload = function() {
+  var i, fig = 1, caps = document.getElementsByClassName('caption');
+  for (i = 0; i < caps.length; i++) {
+    var cap = caps[i];
+    if (cap.parentElement.className !== 'figure' || cap.nodeName !== 'P')
+      continue;
+    cap.innerHTML = '<span>Figure ' + fig + ':</span> ' + cap.innerHTML;
+    fig++;
+  }
+  fig = 1;
+  caps = document.getElementsByTagName('caption');
+  for (i = 0; i < caps.length; i++) {
+    var cap = caps[i];
+    if (cap.parentElement.nodeName !== 'TABLE') continue;
+    cap.innerHTML = '<span>Table ' + fig + ':</span> ' + cap.innerHTML;
+    fig++;
+  }
+}
+</script>
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

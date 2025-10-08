@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head><title>R: Risk Regression Models and Prediction Scores for Survival
+Analysis with Competing Risks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+<h1> Risk Regression Models and Prediction Scores for Survival
+Analysis with Competing Risks
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;riskRegression&rsquo; version 2025.09.17</h2>
+
+<ul><li><a href="../DESCRIPTION" type="text/plain; charset=utf-8">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#P">P</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+</p>
+
+
+<h2><a id="A">-- A --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="anova.ate.html">anova.ate</a></td>
+<td>Risk Comparison Over Time</td></tr>
+<tr><td style="width: 25%;"><a href="riskRegression.html">ARR</a></td>
+<td>Risk Regression Fits a regression model for the risk of an event - allowing for competing risks.</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.table.ate.html">as.data.table.ate</a></td>
+<td>Turn ate Object Into a 'data.table'</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.table.influenceTest.html">as.data.table.influenceTest</a></td>
+<td>Turn influenceTest Object Into a 'data.table'</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.table.predictCox.html">as.data.table.predictCox</a></td>
+<td>Turn predictCox Object Into a 'data.table'</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.table.predictCSC.html">as.data.table.predictCSC</a></td>
+<td>Turn predictCSC Object Into a 'data.table'</td></tr>
+<tr><td style="width: 25%;"><a href="ate.html">ate</a></td>
+<td>Average Treatment Effects Computation</td></tr>
+<tr><td style="width: 25%;"><a href="autoplot.ate.html">autoplot.ate</a></td>
+<td>Plot Average Risks</td></tr>
+<tr><td style="width: 25%;"><a href="autoplot.predictCox.html">autoplot.predictCox</a></td>
+<td>Plot Predictions From a Cox Model</td></tr>
+<tr><td style="width: 25%;"><a href="autoplot.predictCSC.html">autoplot.predictCSC</a></td>
+<td>Plot Predictions From a Cause-specific Cox Proportional Hazard Regression</td></tr>
+<tr><td style="width: 25%;"><a href="autoplot.Score.html">autoplot.Score</a></td>
+<td>ggplot AUC curve</td></tr>
+</table>
+
+<h2><a id="B">-- B --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="baseHaz_cpp.html">baseHaz_cpp</a></td>
+<td>C++ Fast Baseline Hazard Estimation</td></tr>
+<tr><td style="width: 25%;"><a href="boot2pvalue.html">boot2pvalue</a></td>
+<td>Compute the p.value from the distribution under H1</td></tr>
+<tr><td style="width: 25%;"><a href="boxplot.Score.html">boxplot.Score</a></td>
+<td>Boxplot risk quantiles</td></tr>
+</table>
+
+<h2><a id="C">-- C --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="calcSeCox.html">calcSeCox</a></td>
+<td>Computation of standard errors for predictions</td></tr>
+<tr><td style="width: 25%;"><a href="calcSeCSC.html">calcSeCSC</a></td>
+<td>Standard error of the absolute risk predicted from cause-specific Cox models</td></tr>
+<tr><td style="width: 25%;"><a href="Cforest.html">Cforest</a></td>
+<td>S3-wrapper function for cforest from the party package</td></tr>
+<tr><td style="width: 25%;"><a href="coef.ate.html">coef.ate</a></td>
+<td>Estimated Average Treatment Effect.</td></tr>
+<tr><td style="width: 25%;"><a href="coef.CauseSpecificCox.html">coef.CauseSpecificCox</a></td>
+<td>Extract coefficients from a Cause-Specific Cox regression model</td></tr>
+<tr><td style="width: 25%;"><a href="coef.riskRegression.html">coef.riskRegression</a></td>
+<td>Extract coefficients from riskRegression model</td></tr>
+<tr><td style="width: 25%;"><a href="coef.wglm.html">coef.wglm</a></td>
+<td>Estimates from IPCW Logistic Regressions</td></tr>
+<tr><td style="width: 25%;"><a href="colCenter_cpp.html">colCenter_cpp</a></td>
+<td>Apply - by column</td></tr>
+<tr><td style="width: 25%;"><a href="colCumSum.html">colCumSum</a></td>
+<td>Apply cumsum in each column</td></tr>
+<tr><td style="width: 25%;"><a href="colMultiply_cpp.html">colMultiply_cpp</a></td>
+<td>Apply * by column</td></tr>
+<tr><td style="width: 25%;"><a href="colScale_cpp.html">colScale_cpp</a></td>
+<td>Apply / by column</td></tr>
+<tr><td style="width: 25%;"><a href="confint.ate.html">confint.ate</a></td>
+<td>Confidence Intervals and Confidence Bands for the average treatment effect.</td></tr>
+<tr><td style="width: 25%;"><a href="confint.influenceTest.html">confint.influenceTest</a></td>
+<td>Confidence Intervals and Confidence Bands for the Difference Between Two Estimates</td></tr>
+<tr><td style="width: 25%;"><a href="confint.predictCox.html">confint.predictCox</a></td>
+<td>Confidence Intervals and Confidence Bands for the predicted Survival/Cumulative Hazard</td></tr>
+<tr><td style="width: 25%;"><a href="confint.predictCSC.html">confint.predictCSC</a></td>
+<td>Confidence Intervals and Confidence Bands for the Predicted Absolute Risk (Cumulative Incidence Function)</td></tr>
+<tr><td style="width: 25%;"><a href="confint.wglm.html">confint.wglm</a></td>
+<td>Confidence intervals for Estimate from IPCW Logistic Regressions</td></tr>
+<tr><td style="width: 25%;"><a href="coxBaseEstimator.html">coxBaseEstimator</a></td>
+<td>Extract the type of estimator for the baseline hazard</td></tr>
+<tr><td style="width: 25%;"><a href="coxBaseEstimator.html">coxBaseEstimator.coxph</a></td>
+<td>Extract the type of estimator for the baseline hazard</td></tr>
+<tr><td style="width: 25%;"><a href="coxBaseEstimator.html">coxBaseEstimator.GLMnet</a></td>
+<td>Extract the type of estimator for the baseline hazard</td></tr>
+<tr><td style="width: 25%;"><a href="coxBaseEstimator.html">coxBaseEstimator.phreg</a></td>
+<td>Extract the type of estimator for the baseline hazard</td></tr>
+<tr><td style="width: 25%;"><a href="coxBaseEstimator.html">coxBaseEstimator.prodlim</a></td>
+<td>Extract the type of estimator for the baseline hazard</td></tr>
+<tr><td style="width: 25%;"><a href="coxCenter.html">coxCenter</a></td>
+<td>Extract the mean value of the covariates</td></tr>
+<tr><td style="width: 25%;"><a href="coxCenter.html">coxCenter.coxph</a></td>
+<td>Extract the mean value of the covariates</td></tr>
+<tr><td style="width: 25%;"><a href="coxCenter.html">coxCenter.cph</a></td>
+<td>Extract the mean value of the covariates</td></tr>
+<tr><td style="width: 25%;"><a href="coxCenter.html">coxCenter.phreg</a></td>
+<td>Extract the mean value of the covariates</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula.coxph</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula.cph</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula.glm</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula.GLMnet</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula.phreg</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxFormula.html">coxFormula.prodlim</a></td>
+<td>Extract the formula from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxLP.html">coxLP</a></td>
+<td>Compute the linear predictor of a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxLP.html">coxLP.coxph</a></td>
+<td>Compute the linear predictor of a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxLP.html">coxLP.cph</a></td>
+<td>Compute the linear predictor of a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxLP.html">coxLP.GLMnet</a></td>
+<td>Compute the linear predictor of a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxLP.html">coxLP.phreg</a></td>
+<td>Compute the linear predictor of a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxLP.html">coxLP.prodlim</a></td>
+<td>Compute the linear predictor of a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxModelFrame.html">coxModelFrame</a></td>
+<td>Extract the design matrix used to train a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxModelFrame.html">coxModelFrame.coxph</a></td>
+<td>Extract the design matrix used to train a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxModelFrame.html">coxModelFrame.cph</a></td>
+<td>Extract the design matrix used to train a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxModelFrame.html">coxModelFrame.GLMnet</a></td>
+<td>Extract the design matrix used to train a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxModelFrame.html">coxModelFrame.phreg</a></td>
+<td>Extract the design matrix used to train a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxModelFrame.html">coxModelFrame.prodlim</a></td>
+<td>Extract the design matrix used to train a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.CauseSpecificCox</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.coxph</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.cph</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.default</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.glm</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.GLMnet</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.phreg</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxN.html">coxN.prodlim</a></td>
+<td>Extract the number of observations from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxSpecial.html">coxSpecial</a></td>
+<td>Special characters in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxSpecial.html">coxSpecial.coxph</a></td>
+<td>Special characters in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxSpecial.html">coxSpecial.cph</a></td>
+<td>Special characters in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxSpecial.html">coxSpecial.GLMnet</a></td>
+<td>Special characters in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxSpecial.html">coxSpecial.phreg</a></td>
+<td>Special characters in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxSpecial.html">coxSpecial.prodlim</a></td>
+<td>Special characters in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrata.html">coxStrata</a></td>
+<td>Define the strata for a new dataset</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrata.html">coxStrata.coxph</a></td>
+<td>Define the strata for a new dataset</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrata.html">coxStrata.cph</a></td>
+<td>Define the strata for a new dataset</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrata.html">coxStrata.GLMnet</a></td>
+<td>Define the strata for a new dataset</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrata.html">coxStrata.phreg</a></td>
+<td>Define the strata for a new dataset</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrata.html">coxStrata.prodlim</a></td>
+<td>Define the strata for a new dataset</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrataLevel.html">coxStrataLevel</a></td>
+<td>Returns the name of the strata in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrataLevel.html">coxStrataLevel.coxph</a></td>
+<td>Returns the name of the strata in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrataLevel.html">coxStrataLevel.cph</a></td>
+<td>Returns the name of the strata in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrataLevel.html">coxStrataLevel.phreg</a></td>
+<td>Returns the name of the strata in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxStrataLevel.html">coxStrataLevel.prodlim</a></td>
+<td>Returns the name of the strata in Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxVarCov.html">coxVarCov</a></td>
+<td>Extract the variance covariance matrix of the beta from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxVarCov.html">coxVarCov.coxph</a></td>
+<td>Extract the variance covariance matrix of the beta from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxVarCov.html">coxVarCov.cph</a></td>
+<td>Extract the variance covariance matrix of the beta from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxVarCov.html">coxVarCov.phreg</a></td>
+<td>Extract the variance covariance matrix of the beta from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxVarCov.html">coxVarCov.prodlim</a></td>
+<td>Extract the variance covariance matrix of the beta from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="coxVariableName.html">coxVariableName</a></td>
+<td>Extract variable names from a model</td></tr>
+<tr><td style="width: 25%;"><a href="CSC.html">CSC</a></td>
+<td>Cause-specific Cox proportional hazard regression</td></tr>
+<tr><td style="width: 25%;"><a href="Ctree.html">Ctree</a></td>
+<td>S3-Wrapper for ctree.</td></tr>
+</table>
+
+<h2><a id="D">-- D --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="dicreteRoot.html">discreteRoot</a></td>
+<td>Dichotomic search for monotone function</td></tr>
+</table>
+
+<h2><a id="F">-- F --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="FGR.html">FGR</a></td>
+<td>Formula wrapper for crr from cmprsk</td></tr>
+</table>
+
+<h2><a id="G">-- G --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="getSplitMethod.html">getSplitMethod</a></td>
+<td>Input for data splitting algorithms</td></tr>
+<tr><td style="width: 25%;"><a href="GLMnet.html">GLMnet</a></td>
+<td>Formula interface for glmnet</td></tr>
+</table>
+
+<h2><a id="H">-- H --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="Hal9001.html">Hal9001</a></td>
+<td>Fitting HAL for use with predictRisk</td></tr>
+</table>
+
+<h2><a id="I">-- I --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="iid.wglm.html">iid.wglm</a></td>
+<td>IID for IPCW Logistic Regressions</td></tr>
+<tr><td style="width: 25%;"><a href="iidCox.html">iidCox</a></td>
+<td>Extract iid decomposition from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="iidCox.html">iidCox.CauseSpecificCox</a></td>
+<td>Extract iid decomposition from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="iidCox.html">iidCox.coxph</a></td>
+<td>Extract iid decomposition from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="iidCox.html">iidCox.cph</a></td>
+<td>Extract iid decomposition from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="iidCox.html">iidCox.phreg</a></td>
+<td>Extract iid decomposition from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="iidCox.html">iidCox.prodlim</a></td>
+<td>Extract iid decomposition from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="influenceTest.html">influenceTest</a></td>
+<td>Influence test [Experimental!!]</td></tr>
+<tr><td style="width: 25%;"><a href="influenceTest.html">influenceTest.default</a></td>
+<td>Influence test [Experimental!!]</td></tr>
+<tr><td style="width: 25%;"><a href="influenceTest.html">influenceTest.list</a></td>
+<td>Influence test [Experimental!!]</td></tr>
+<tr><td style="width: 25%;"><a href="information.wglm.html">information.wglm</a></td>
+<td>Information for IPCW Logistic Regressions</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">IPA</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">IPA.CauseSpecificCox</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">IPA.coxph</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">IPA.default</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">IPA.glm</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="ipcw.html">ipcw</a></td>
+<td>Estimation of censoring probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="ipcw.html">ipcw.aalen</a></td>
+<td>Estimation of censoring probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="ipcw.html">ipcw.cox</a></td>
+<td>Estimation of censoring probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="ipcw.html">ipcw.marginal</a></td>
+<td>Estimation of censoring probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="ipcw.html">ipcw.none</a></td>
+<td>Estimation of censoring probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="ipcw.html">ipcw.nonpar</a></td>
+<td>Estimation of censoring probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="is.iidCox.html">is.iidCox</a></td>
+<td>Check Computation of the Influence Function in a Cox Model</td></tr>
+</table>
+
+<h2><a id="L">-- L --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="riskRegression.html">LRR</a></td>
+<td>Risk Regression Fits a regression model for the risk of an event - allowing for competing risks.</td></tr>
+</table>
+
+<h2><a id="M">-- M --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="Melanoma.html">Melanoma</a></td>
+<td>Malignant melanoma data</td></tr>
+<tr><td style="width: 25%;"><a href="model.matrix.cph.html">model.matrix.cph</a></td>
+<td>Extract design matrix for cph objects</td></tr>
+<tr><td style="width: 25%;"><a href="model.matrix.phreg.html">model.matrix.phreg</a></td>
+<td>Extract design matrix for phreg objects</td></tr>
+<tr><td style="width: 25%;"><a href="model.tables.ate.html">model.tables.ate</a></td>
+<td>Statistical Inference for the Average Treatment Effect</td></tr>
+<tr><td style="width: 25%;"><a href="model.tables.wglm.html">model.tables.wglm</a></td>
+<td>Statistical Inference for Estimate from IPCW Logistic Regressions</td></tr>
+</table>
+
+<h2><a id="P">-- P --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="Paquid.html">Paquid</a></td>
+<td>Paquid sample</td></tr>
+<tr><td style="width: 25%;"><a href="penalizedS3.html">penalizedS3</a></td>
+<td>S3-wrapper for S4 function penalized</td></tr>
+<tr><td style="width: 25%;"><a href="plot.riskRegression.html">plot.riskRegression</a></td>
+<td>Plotting predicted risk</td></tr>
+<tr><td style="width: 25%;"><a href="plotAUC.html">plotAUC</a></td>
+<td>Plot of time-dependent AUC curves</td></tr>
+<tr><td style="width: 25%;"><a href="plotBrier.html">plotBrier</a></td>
+<td>Plot Brier curve</td></tr>
+<tr><td style="width: 25%;"><a href="plotCalibration.html">plotCalibration</a></td>
+<td>Plot Calibration curve</td></tr>
+<tr><td style="width: 25%;"><a href="plotEffects.html">plotEffects</a></td>
+<td>Plotting time-varying effects from a risk regression model.</td></tr>
+<tr><td style="width: 25%;"><a href="plotPredictRisk.html">plotPredictRisk</a></td>
+<td>Plotting predicted risks curves.</td></tr>
+<tr><td style="width: 25%;"><a href="plotRisk.html">plotRisk</a></td>
+<td>plot predicted risks</td></tr>
+<tr><td style="width: 25%;"><a href="plotROC.html">plotROC</a></td>
+<td>Plot ROC curves</td></tr>
+<tr><td style="width: 25%;"><a href="predict.CauseSpecificCox.html">predict.CauseSpecificCox</a></td>
+<td>Predicting Absolute Risk from Cause-Specific Cox Models</td></tr>
+<tr><td style="width: 25%;"><a href="predict.FGR.html">predict.FGR</a></td>
+<td>Predict subject specific risks (cumulative incidence) based on Fine-Gray regression model</td></tr>
+<tr><td style="width: 25%;"><a href="predict.riskRegression.html">predict.riskRegression</a></td>
+<td>Predict individual risk.</td></tr>
+<tr><td style="width: 25%;"><a href="predict.CauseSpecificCox.html">predictBig.CauseSpecificCox</a></td>
+<td>Predicting Absolute Risk from Cause-Specific Cox Models</td></tr>
+<tr><td style="width: 25%;"><a href="predictCox.html">predictCox</a></td>
+<td>Survival probabilities, hazards and cumulative hazards from Cox regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictCoxPL.html">predictCoxPL</a></td>
+<td>Deprecated Function for Product Limit Estimation of Survival Probabilities .</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.aalen</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.ARR</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.BinaryTree</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.CauseSpecificCox</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.comprisk</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.cox.aalen</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.CoxConfidential</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.coxph</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.coxph.penal</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.cph</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.default</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.double</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.factor</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.FGR</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.flexsurvreg</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.formula</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.gbm</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.glm</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.GLMnet</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.Hal9001</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.integer</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.lrm</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.matrix</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.multinom</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.numeric</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.pecCforest</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.pecCtree</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.penfitS3</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.prodlim</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.psm</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.randomForest</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.ranger</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.rfsrc</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.riskRegression</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.rpart</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.selectCox</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.singleEventCB</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.SuperPredictor</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.survfit</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="predictRisk.html">predictRisk.wglm</a></td>
+<td>Extrating predicting risks from regression models</td></tr>
+<tr><td style="width: 25%;"><a href="print.ate.html">print.ate</a></td>
+<td>Print Average Treatment Effects</td></tr>
+<tr><td style="width: 25%;"><a href="print.CauseSpecificCox.html">print.CauseSpecificCox</a></td>
+<td>Print of a Cause-Specific Cox regression model</td></tr>
+<tr><td style="width: 25%;"><a href="print.FGR.html">print.FGR</a></td>
+<td>Print of a Fine-Gray regression model</td></tr>
+<tr><td style="width: 25%;"><a href="print.GLMnet.html">print.GLMnet</a></td>
+<td>Print of a glmnet regression model</td></tr>
+<tr><td style="width: 25%;"><a href="print.influenceTest.html">print.influenceTest</a></td>
+<td>Output of the DIfference Between Two Estimates</td></tr>
+<tr><td style="width: 25%;"><a href="print.IPA.html">print.IPA</a></td>
+<td>Print IPA object</td></tr>
+<tr><td style="width: 25%;"><a href="print.predictCox.html">print.predictCox</a></td>
+<td>Print Predictions From a Cox Model</td></tr>
+<tr><td style="width: 25%;"><a href="print.predictCSC.html">print.predictCSC</a></td>
+<td>Print Predictions From a Cause-specific Cox Proportional Hazard Regression</td></tr>
+<tr><td style="width: 25%;"><a href="print.riskRegression.html">print.riskRegression</a></td>
+<td>Print function for riskRegression models</td></tr>
+<tr><td style="width: 25%;"><a href="print.Score.html">print.Score</a></td>
+<td>Print Score object</td></tr>
+<tr><td style="width: 25%;"><a href="print.subjectWeights.html">print.subjectWeights</a></td>
+<td>Print subject weights</td></tr>
+<tr><td style="width: 25%;"><a href="print.synth_code.html">print.synth_code</a></td>
+<td>Print synthesized code</td></tr>
+</table>
+
+<h2><a id="R">-- R --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="reconstructData.html">reconstructData</a></td>
+<td>Reconstruct the original dataset</td></tr>
+<tr><td style="width: 25%;"><a href="riskLevelPlot.html">riskLevelPlot</a></td>
+<td>Level plots for risk prediction models</td></tr>
+<tr><td style="width: 25%;"><a href="riskRegression.html">riskRegression</a></td>
+<td>Risk Regression Fits a regression model for the risk of an event - allowing for competing risks.</td></tr>
+<tr><td style="width: 25%;"><a href="riskRegression.options.html">riskRegression.options</a></td>
+<td>Global options for 'riskRegression'</td></tr>
+<tr><td style="width: 25%;"><a href="rowCenter_cpp.html">rowCenter_cpp</a></td>
+<td>Apply - by row</td></tr>
+<tr><td style="width: 25%;"><a href="rowCumSum.html">rowCumSum</a></td>
+<td>Apply cumsum in each row</td></tr>
+<tr><td style="width: 25%;"><a href="rowMultiply_cpp.html">rowMultiply_cpp</a></td>
+<td>Apply * by row</td></tr>
+<tr><td style="width: 25%;"><a href="rowPaste.html">rowPaste</a></td>
+<td>Collapse Rows of Characters.</td></tr>
+<tr><td style="width: 25%;"><a href="rowScale_cpp.html">rowScale_cpp</a></td>
+<td>Apply / by row</td></tr>
+<tr><td style="width: 25%;"><a href="rowSumsCrossprod.html">rowSumsCrossprod</a></td>
+<td>Apply crossprod and rowSums</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">rsquared</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">rsquared.CauseSpecificCox</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">rsquared.coxph</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">rsquared.default</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+<tr><td style="width: 25%;"><a href="IPA.html">rsquared.glm</a></td>
+<td>Explained variation for settings with binary, survival and competing risk outcome</td></tr>
+</table>
+
+<h2><a id="S">-- S --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="sampleData.html">sampleData</a></td>
+<td>Simulate data with binary or time-to-event outcome</td></tr>
+<tr><td style="width: 25%;"><a href="saveCoxConfidential.html">saveCoxConfidential</a></td>
+<td>Save confidential Cox objects</td></tr>
+<tr><td style="width: 25%;"><a href="saveSynth.html">saveSynth</a></td>
+<td>Export a 'synth' object.</td></tr>
+<tr><td style="width: 25%;"><a href="Score.html">Score</a></td>
+<td>Score risk predictions</td></tr>
+<tr><td style="width: 25%;"><a href="Score.html">Score.list</a></td>
+<td>Score risk predictions</td></tr>
+<tr><td style="width: 25%;"><a href="score.wglm.html">score.wglm</a></td>
+<td>Score for IPCW Logistic Regressions</td></tr>
+<tr><td style="width: 25%;"><a href="selectCox.html">selectCox</a></td>
+<td>Backward variable selection in the Cox regression model</td></tr>
+<tr><td style="width: 25%;"><a href="selectJump.html">selectJump</a></td>
+<td>Evaluate the influence function at selected times</td></tr>
+<tr><td style="width: 25%;"><a href="simActiveSurveillance.html">simActiveSurveillance</a></td>
+<td>Simulate data of a hypothetical active surveillance prostate cancer study</td></tr>
+<tr><td style="width: 25%;"><a href="simMelanoma.html">simMelanoma</a></td>
+<td>Simulate data alike the Melanoma data</td></tr>
+<tr><td style="width: 25%;"><a href="simPBC.html">simPBC</a></td>
+<td>simulating data alike the pbc data</td></tr>
+<tr><td style="width: 25%;"><a href="simsynth.html">simsynth</a></td>
+<td>Simulating from a synthesized object</td></tr>
+<tr><td style="width: 25%;"><a href="SmcFcs.html">SmcFcs</a></td>
+<td>SmcFcs</td></tr>
+<tr><td style="width: 25%;"><a href="splitStrataVar.html">splitStrataVar</a></td>
+<td>Reconstruct each of the strata variables</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights.aalen</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights.cox</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights.km</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights.marginal</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights.none</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subjectWeights.html">subjectWeights.nonpar</a></td>
+<td>Estimation of censoring probabilities at subject specific times</td></tr>
+<tr><td style="width: 25%;"><a href="subsetIndex.html">subsetIndex</a></td>
+<td>Extract Specific Elements From An Object</td></tr>
+<tr><td style="width: 25%;"><a href="subsetIndex.html">subsetIndex.default</a></td>
+<td>Extract Specific Elements From An Object</td></tr>
+<tr><td style="width: 25%;"><a href="subsetIndex.html">subsetIndex.matrix</a></td>
+<td>Extract Specific Elements From An Object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.ate.html">summary.ate</a></td>
+<td>Summary Average Treatment Effects</td></tr>
+<tr><td style="width: 25%;"><a href="summary.FGR.html">summary.FGR</a></td>
+<td>Summary of a Fine-Gray regression model</td></tr>
+<tr><td style="width: 25%;"><a href="summary.riskRegression.html">summary.riskRegression</a></td>
+<td>Summary of a risk regression model</td></tr>
+<tr><td style="width: 25%;"><a href="summary.Score.html">summary.Score</a></td>
+<td>Summary of prediction performance metrics</td></tr>
+<tr><td style="width: 25%;"><a href="SuperPredictor.html">SuperPredictor</a></td>
+<td>Formula interface for SuperLearner::SuperLearner</td></tr>
+<tr><td style="width: 25%;"><a href="SurvResponseVar.html">SurvResponseVar</a></td>
+<td>Extract the time and event variable from a Cox model</td></tr>
+<tr><td style="width: 25%;"><a href="synthesize.html">synthesize</a></td>
+<td>Cooking and synthesizing survival data</td></tr>
+<tr><td style="width: 25%;"><a href="synthesize.html">synthesize.formula</a></td>
+<td>Cooking and synthesizing survival data</td></tr>
+<tr><td style="width: 25%;"><a href="synthesize.html">synthesize.lvm</a></td>
+<td>Cooking and synthesizing survival data</td></tr>
+</table>
+
+<h2><a id="T">-- T --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="terms.phreg.html">terms.phreg</a></td>
+<td>Extract terms for phreg objects</td></tr>
+<tr><td style="width: 25%;"><a href="transformCIBP.html">transformCIBP</a></td>
+<td>Compute Confidence Intervals/Bands and P-values After a Transformation</td></tr>
+</table>
+
+<h2><a id="V">-- V --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="vcov.ate.html">vcov.ate</a></td>
+<td>Variance-Covariance Matrix for the Average Treatment Effect.</td></tr>
+<tr><td style="width: 25%;"><a href="vcov.wglm.html">vcov.wglm</a></td>
+<td>Variance-covariance for IPCW Logistic Regressions</td></tr>
+</table>
+
+<h2><a id="W">-- W --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="weights.wglm.html">weights.wglm</a></td>
+<td>Extract IPCW Weights</td></tr>
+<tr><td style="width: 25%;"><a href="wglm.html">wglm</a></td>
+<td>Logistic Regression Using IPCW</td></tr>
+</table>
+</div></body></html>

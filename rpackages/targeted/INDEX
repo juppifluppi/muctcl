@@ -1,0 +1,34 @@
+ML                      ML model
+NB                      Naive Bayes
+NB-class                NB class object
+RATE                    Responder Average Treatment Effect
+RATE.surv               Responder Average Treatment Effect
+SL                      SuperLearner wrapper for ml_model
+aipw                    AIPW estimator
+alean                   Assumption Lean inference for generalized
+                        linear model parameters
+ate                     AIPW (doubly-robust) estimator for Average
+                        Treatement Effect
+calibration             Calibration (training)
+calibration-class       calibration class object
+cate                    Conditional Average Treatment Effect estimation
+cate_link               Conditional Relative Risk estimation
+cross_validated-class   cross_validated class object
+crr                     Conditional Relative Risk estimation
+cv                      Cross-validation
+design                  Extract design matrix
+expand.list             Create a list from all combination of input
+                        variables
+ml_model                R6 class for prediction models
+nondom                  Find non-dominated points of a set
+pava                    Pooled Adjacent Violators Algorithm
+predict.NB              Predictions for Naive Bayes Classifier
+predict.density         Prediction for kernel density estimates
+riskreg                 Risk regression
+riskreg_cens            Binary regression models with right censored
+                        outcomes
+scoring                 Predictive model scoring
+softmax                 Softmax transformation
+solve_ode               Solve ODE
+specify_ode             Specify Ordinary Differential Equation (ODE)
+targeted-class          targeted class object

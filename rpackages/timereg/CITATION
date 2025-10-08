@@ -1,0 +1,33 @@
+citHeader("To cite timereg in publications use:")
+
+bibentry(bibtype = "book",
+  title        = "Dynamic Regression models for survival data",
+  author       = c(person("Thomas","Scheike"), 
+                   person("Torben","Martinussen")),
+  publisher    = "Springer, NY",
+  year         = "2006",
+
+  textVersion  =
+  paste("Thomas H. Scheike, Torben Martinussen (2006).",
+        "Dynamic Regression models for survival data.",
+        "Springer, New-York")
+)
+
+bibentry(bibtype = "Article",
+  title        = "Analyzing Competing Risk Data Using the {R} {timereg} Package",
+  author       = c(person("Thomas","Scheike"), 
+                   person("Mei-Jie","Zhang")),
+  journal      = "Journal of Statistical Software",
+  year         = "2011",
+  volume       = "38",
+  number       = "2",
+  pages        = "1--15",
+  url          = "https://www.jstatsoft.org/v38/i02/",
+
+  textVersion  =
+  paste("Thomas H. Scheike, Mei-Jie Zhang (2011).",
+        "Analyzing Competing Risk Data Using the R timereg Package.",
+        "Journal of Statistical Software, 38(2), 1-15.",
+        "URL https://www.jstatsoft.org/v38/i02/.")
+)
+
