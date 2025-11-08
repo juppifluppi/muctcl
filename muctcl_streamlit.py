@@ -23,6 +23,8 @@ import shutil
 import subprocess
 import time
 
+st.set_page_config(page_title="muctcl")
+
 def show_mol(d2d,mol,legend='',highlightAtoms=[]):
     d2d.DrawMolecule(mol,legend=legend, highlightAtoms=highlightAtoms)
     d2d.FinishDrawing()
